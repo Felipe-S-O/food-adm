@@ -3,7 +3,9 @@ import { Text, View, Switch, Image, TouchableOpacity } from 'react-native'
 import { TemaContext } from "../../contexts/TemaContext";
 import { estilos } from "./estilos";
 import { Picker } from "@react-native-picker/picker";
+import { Feather } from 'react-native-vector-icons'
 import { auth } from '../../config/Firbase'
+import Topo from '../../components/Topo';
 import { useNavigation } from "@react-navigation/native";
 
 export default function Configuracoes() {
@@ -11,7 +13,6 @@ export default function Configuracoes() {
     const navigation = useNavigation();
 
     const { temaAtual, temaEscolhido, salvarTemaNoDispositivo, moduloAtual, salvarModulo } = useContext(TemaContext);
-
     const estilo = estilos(temaEscolhido)
 
     const [selectedValue, setSelectedValue] = useState()
@@ -29,36 +30,23 @@ export default function Configuracoes() {
     return (
         <TemaContext.Provider value={temaAtual}>
             <View style={estilo.container}>
-                <View style={estilo.topoArea} >
-                    <Text style={estilo.textoTopo}>Configurações</Text>
-                    <Image
-                        source={require('../../assets/inottec-food-branco.png')}
-                        style={estilo.imageTopo}
-                    />
+                <Topo texto='Configuração' />
+                <View style={estilo.sairArea}>
+                    <TouchableOpacity style={estilo.botao} onPress={() => deslogar()} >
+                        <Text style={estilo.botaoTexto}>sair </Text>
+                        <Feather text='sair' name="log-out" size={32} color="#FAB005" />
+                    </TouchableOpacity>
                 </View>
-                <TouchableOpacity style={estilos.botao} onPress={() => deslogar()} >
-                    <Text style={estilos.botaoTexto}>Sair</Text>
-                </TouchableOpacity>
                 <View style={estilo.switchArea}>
-                    <Text style={estilo.textoSwitch}>Tema</Text>
+                    <Text style={estilo.textoSwitch}>Tema: </Text>
+                    <Text style={estilo.textoTema}>{temaAtual === 'escuro' ? 'escuro' : 'claro'}</Text>
                     <Switch
-                        trackColor={{ false: '#767577', true: '#81b0ff' }}
+                        trackColor={{ false: '#767577', true: "#FAB005" }}
                         style={estilo.switch}
                         ios_backgroundColor="#3e3e3e"
                         onValueChange={() => temaAtual === 'escuro' ? salvarTemaNoDispositivo('claro') : salvarTemaNoDispositivo('escuro')}
                         value={temaAtual === 'escuro' ? true : false}
                     />
-                </View>
-                <View style={estilo.pickerarea}>
-                    <Text style={estilo.textoPicker}>Modúlos</Text>
-                    <Picker
-                        selectedValue={moduloAtual}
-                        style={estilo.picker}
-                        onValueChange={(itemValue, itemIndex) => setModulo(itemValue)}
-                    >
-                        <Picker.Item label="Comanda/Mesa" value='mesa' style={estilo.itemPicker} />
-                        <Picker.Item label="Comanda" value='comanda' style={estilo.itemPicker} />
-                    </Picker>
                 </View>
             </View >
         </TemaContext.Provider>

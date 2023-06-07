@@ -5,6 +5,7 @@ export default StyleSheet.create({
     height: 150,
     width: Dimensions.get("window").width,
     paddingLeft: 60,
+    marginTop:-86
   },
   image: {
     height: '100%',

@@ -1,7 +1,9 @@
+import { BotaoCadastro } from "../../components/BotaoCadastro";
 import { TemaContext } from "../../contexts/TemaContext";
+import { View, FlatList } from 'react-native'
 import React, { useContext } from "react";
-import { View, Text, Image, TouchableOpacity } from 'react-native'
-
+import { StatusBar } from "react-native";
+import Topo from '../../components/Topo';
 import { estilos } from './estilos'
 
 export default () => {
@@ -9,25 +11,19 @@ export default () => {
     const { temaEscolhido } = useContext(TemaContext);
 
     const estilo = estilos(temaEscolhido)
+    const botoes = ['produtos', 'categorias']
 
     return (
         <View style={estilo.container}>
-            <View style={estilo.topoArea} >
-                <Text style={estilo.textoTopo}>Estoque</Text>
-                <Image
-                    source={require('../../assets/inottec-food-branco.png')}
-                    style={estilo.imageTopo}
-                />
-            </View>
-            <View style={estilo.areaCaixa}>
-                <TouchableOpacity style={estilo.botaoArea}>
-                    <Text style={estilo.text}>Saldo</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={estilo.botaoArea}>
-                    <Text style={estilo.text}>Entrada Avulsa</Text>
-                </TouchableOpacity>
-            </View>
-
+            <StatusBar barStyle='dark-content' backgroundColor='#15AABF' />
+            <Topo texto='Estoque' />
+            <FlatList
+                numColumns={2}
+                data={botoes}
+                keyExtractor={item => Math.random()}
+                renderItem={({ item }) => <BotaoCadastro item={item} />}
+                showsVerticalScrollIndicator={false}
+            />
 
         </View>
     )

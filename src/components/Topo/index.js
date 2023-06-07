@@ -10,7 +10,6 @@ export default function Topo({ texto, icon }) {
     const navigation = useNavigation();
 
     const { temaEscolhido } = useContext(TemaContext);
-
     const estilo = estilos(temaEscolhido)
 
     return (

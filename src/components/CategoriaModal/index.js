@@ -140,7 +140,7 @@ export default function CategoriaModal({ itemSelecionado, setItemSelecionado, co
 
 
               <View style={[estilo.checkbox, { marginBottom: 28 }]}>
-                <CheckboxPesonalisado texto=" Ativo" cor="#FAB005" flexDirection='row' botaoAtivo={true} value={ativo} setValue={setAtivo} />
+                <CheckboxPesonalisado texto=" Ativa" cor="#FAB005" flexDirection='row' botaoAtivo={true} value={ativo} setValue={setAtivo} />
                 <CheckboxPesonalisado texto=" Visivel" cor="#FAB005" flexDirection='row' botaoAtivo={true} value={visivel} setValue={setVisivel} />
               </View>
 

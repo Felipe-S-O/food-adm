@@ -15,12 +15,12 @@ export const estilos = (tema) => {
             justifyContent: 'space-between',
             padding: 5,
             marginBottom: 16,
-            backgroundColor: tema.cor1,
+            backgroundColor: '#15AABF',
         },
         textoTopo: {
             fontSize: 18,
             fontWeight: 'bold',
-            color: tema.texto,
+            color: '#FFFFFF',
             marginLeft: 10,
         },
     })

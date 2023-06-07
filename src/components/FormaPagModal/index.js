@@ -54,32 +54,32 @@ export default function FormaPagModal({ }) {
               <TextInput
                 style={estilos.modalInput}
                 onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="codigo do produto"
+                placeholder="***"
                 value={cliente} />
               <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
 
-              <Text style={estilos.modalSubTitulo}>Nome do produto*</Text>
+              <Text style={estilos.modalSubTitulo}>Nome:</Text>
               <TextInput
                 style={estilos.modalInput}
                 onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="Digite o nome do produto"
+                placeholder="Digite o nome"
                 value={cliente} />
               <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
 
-              <Text style={estilos.modalSubTitulo}>Categoria*</Text>
+              <Text style={estilos.modalSubTitulo}>Tipo Pagto:</Text>
               <TextInput
                 style={estilos.modalInput}
                 onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="selecione a categoria"
+                placeholder="selecione o tipo"
                 value={cliente} />
               <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
 
-              <Text style={estilos.modalSubTitulo}>Preço de venda</Text>
+              <Text style={estilos.modalSubTitulo}>Comissão:</Text>
               <TextInput
                 style={estilos.modalInput}
                 multiline={true}
                 onChangeText={novoDescricao => setDescricao(novoDescricao)}
-                placeholder="Digite aqui a descrição"
+                placeholder="%0,0"
                 value={descricao} />
               <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
 

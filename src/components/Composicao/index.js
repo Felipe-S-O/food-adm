@@ -1,27 +1,24 @@
 import { Text, View, TouchableOpacity, FlatList } from 'react-native';
-import { estilos } from './estilos'
+import { buscaListaInsumo } from '../../server/firestore';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { TemaContext } from "../../contexts/TemaContext";
 import { useContext, useEffect, useState } from 'react';
-import CampoTexto from '../CampoTexto';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { ListaComposicao } from '../ListaComposicao';
-import { vendas } from './vendas';
-import { buscaListaInsumo } from '../../server/firestore';
+import CampoTexto from '../CampoTexto';
+import { estilos } from './estilos'
 
-export function Composicao({ idEmpresa }) {
+export function Composicao({ idEmpresa, itemsComposicao, setItemsComposicao }) {
 
     const { temaEscolhido } = useContext(TemaContext);
     const estilo = estilos(temaEscolhido)
 
-    const [quantidade, setQuantidade] = useState('')
+    const [quantidade, setQuantidade] = useState('');
     const [mensagemError, setMensagemError] = useState("");
     const [statusError, setStatusError] = useState("");
     const [open, setOpen] = useState(false);
     const [produtoSelecionado, setProdutoSelecionada] = useState(null);
     const [items, setItems] = useState([]);
-    const [lista, setLista] = useState([])
-    const [itemsComposicao, setItemsComposicao] = useState([]);
-
+    const [lista, setLista] = useState([]);
 
     useEffect(() => {
         const tabela = ('produtos')
@@ -73,14 +70,12 @@ export function Composicao({ idEmpresa }) {
                     }
                 }
             })
-
             setItemsComposicao(listaDeProdutos)
             limpaModal()
         }
     }
 
     function removerItem(codigo) {
-
         // let index = buscaItem(codigo)
         let ajusteDeComposicao = []
 
@@ -93,16 +88,12 @@ export function Composicao({ idEmpresa }) {
                 }
             }
         })
-
         setItemsComposicao(ajusteDeComposicao)
     }
 
     // function buscaItem(codigo) {
     //     return itemsComposicao.findIndex(produto => produto.codigo == codigo)
     //  }
-
-
-
     return <>
         <View style={estilo.area}>
             <Text style={estilo.subTitulo}>Produto*</Text>

@@ -62,11 +62,12 @@ export default function ProdutoModal({ itemSelecionado, setItemSelecionado, codi
   const [categoriaSelecionada, setCategoriaSelecionada] = useState(null);
   const [items, setItems] = useState([]);
   const tabela = ('produtos')
-  
+
+  const [itemsComposicao, setItemsComposicao] = useState([]);
+
   useEffect(() => {
     const tabela = ('categorias')
     buscalista(setLista, tabela, idEmpresa)
-
   }, [])
 
   useEffect(() => {
@@ -135,6 +136,7 @@ export default function ProdutoModal({ itemSelecionado, setItemSelecionado, codi
     setModalVisivel(false)
     setItemSelecionado({})
     setMenu('geral')
+    setItemsComposicao([])
   }
 
   async function salvar() {
@@ -176,6 +178,7 @@ export default function ProdutoModal({ itemSelecionado, setItemSelecionado, codi
         sab: sab,
         dom: dom,
         categoria: categoriaSelecionada,
+        itemsComposicao: itemsComposicao,
         idEmpresa: idEmpresa
       }, tabela)
     }
@@ -357,12 +360,11 @@ export default function ProdutoModal({ itemSelecionado, setItemSelecionado, codi
               </View>
               : menu == 'promoção' ?
                 <View>
-                  <Text style={estilo.subTitulo}>Disponível</Text>
                   <Promocao />
                 </View>
                 :
                 <View>
-                  <Composicao idEmpresa={idEmpresa}/>
+                  <Composicao idEmpresa={idEmpresa} itemsComposicao={itemsComposicao} setItemsComposicao={setItemsComposicao} />
                 </View>
             }
             <View style={estilo.modalBotoes}>

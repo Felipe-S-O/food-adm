@@ -1,241 +1,185 @@
-import React, { useContext, useEffect, useState } from "react"
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native"
+import React, { useContext, useState } from "react"
+import { Modal, View, Text, TextInput, TouchableOpacity, FlatList} from "react-native"
 import { EmpresaContext } from "../../contexts/EmpresaContext";
-
+import { TemaContext } from "../../contexts/TemaContext";
+import { estilos } from './estilos'
+import DropDownPicker from 'react-native-dropdown-picker';
+import { vendas } from "./vendas";
+import { ListaComposicao } from "../ListaComposicao";
+import { MenuCombo } from "../MenuCombo";
 
 export default function ComboModal({ }) {
 
 
-  const { idEmpresa } = useContext(EmpresaContext)
-  const [cliente, setCliente] = useState('')
-  const [horarioAtual, setHorarioAtual] = useState('')
-  const [minutos, setMinutos] = useState('')
-  const [idHorario, setIdHorario] = useState('')
-  const [descricao, setDescricao] = useState('')
-  const [modalVisivel, setModalVisivel] = useState(false)
-  const [modalSelecionaHorario, setModalSelecionaHorario] = useState(false)
-  const [tarefaParaAtualizar, setTarefaParaAtualizar] = useState(false)
-  const [lottieOK, setLottieOK] = useState(0)
-  const [statusError, setStatusError] = useState('');
+    const { temaEscolhido } = useContext(TemaContext);
+    const estilo = estilos(temaEscolhido)
+
+    const { idEmpresa } = useContext(EmpresaContext)
+    const [cliente, setCliente] = useState('')
+    const [descricao, setDescricao] = useState('')
+    const [modalVisivel, setModalVisivel] = useState(false)
+    const [modalSelecionaHorario, setModalSelecionaHorario] = useState(false)
+    const [tarefaParaAtualizar, setTarefaParaAtualizar] = useState(false)
+    const [lottieOK, setLottieOK] = useState(0)
+    const [statusError, setStatusError] = useState('');
+    const [passo, setPasso] = useState(1)
+    const [tipoMedida, setTipoMedida] = useState('')
+
+    const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false);
+    const [value, setValue] = useState(null);
+    const [items2, setItems2] = useState([
+        { label: 'Preço', value: '01' },
+        { label: 'Somar', value: '02' },
+        { label: 'Somar', value: '03' },
+        { label: 'Ignorar', value: '05' },
+    ]);
+    const [items, setItems] = useState([
+        { label: 'Preço do produto de maior valor', value: '01' },
+        { label: 'Somar o preço dos produtos ao produto principal', value: '02' },
+        { label: 'Somar os preços e dividir pela qtde de prod selecionados', value: '03' },
+        { label: 'Ignorar o preço dos produtos e considerar apenas o preço do prod. principal', value: '05' },
+    ]);
+
+    function limpaModal() {
+        setCliente('')
+        setDescricao('')
+        setStatusError('')
+        setMinutos('')
+        setHorarioAtual('')
+        setModalVisivel(false)
+        setTarefaParaAtualizar(false)
+    }
+
+    function tempo() {
+        const intervalo = setInterval(() => {
+            setLottieOK(0)
+            clearInterval(intervalo);
+        }, 2000)
+    }
 
 
-  function limpaModal() {
-    setCliente('')
-    setDescricao('')
-    setStatusError('')
-    setMinutos('')
-    setHorarioAtual('')
-    setModalVisivel(false)
-    setTarefaParaAtualizar(false)
-  }
+    return (
+        <>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisivel}
+                onRequestClose={() => { setModalVisivel(false) }}
+            >
+                <View style={estilo.centralizaModal}>
+                    <View style={estilo.modal}>
+                        <Text style={estilo.modalTitulo}>Criar combo</Text>
+                        <Text style={estilo.modalSubTitulo}>Produto*</Text>
+                        <DropDownPicker
+                            style={estilo.dropDownPicker}
+                            open={open}
+                            value={value}
+                            items={items2}
+                            searchable={true}
+                            dropDownDirection="TOP"
+                            language="PT"
+                            setOpen={setOpen}
+                            setValue={setValue}
+                            setItems={setItems2}
+                        />
 
-  function tempo() {
-    const intervalo = setInterval(() => {
-      setLottieOK(0)
-      clearInterval(intervalo);
-    }, 2000)
-  }
+                        <MenuCombo passo={passo} setPasso={setPasso} />
+                        <Text style={estilo.modalSubTitulo}>Defina um título para o passo:</Text>
+                        <TextInput
+                            style={estilo.modalInput}
+                            onChangeText={novoCliente => setCliente(novoCliente)}
+                            placeholder="Digite o nome do produto"
+                            value={cliente} />
+                        <Text style={estilo.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
+
+                        <View style={estilo.quantidadePermitida}>
+                            <Text style={estilo.subTitulQuantidade}>Mín</Text>
+                            <TextInput
+                                style={estilo.inputQuantidade}
+                                onChangeText={novoCliente => setCliente(novoCliente)}
+                                placeholder="00"
+                                value={cliente}
+                                keyboardType='numeric'
+                            />
+                            <Text style={estilo.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
+
+                            <Text style={estilo.subTitulQuantidade}>Máx</Text>
+                            <TextInput
+                                style={estilo.inputQuantidade}
+                                multiline={true}
+                                onChangeText={novoDescricao => setDescricao(novoDescricao)}
+                                placeholder="00"
+                                value={descricao}
+                                keyboardType='numeric'
+                            />
+                            <Text style={estilo.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
+                        </View>
 
 
-  return (
-    <>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisivel}
-        onRequestClose={() => { setModalVisivel(false) }}
-      >
-        <View style={estilos.centralizaModal}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={estilos.modal}>
-              <Text style={estilos.modalTitulo}>Criar combo</Text>
+                        <Text style={estilo.modalSubTitulo}>Método de cálculo:</Text>
+                        <DropDownPicker
+                            style={estilo.dropDownPicker}
+                            open={open2}
+                            value={value}
+                            items={items}
+                            searchable={true}
+                            dropDownDirection="TOP"
+                            language="PT"
+                            setOpen={setOpen2}
+                            setValue={setValue}
+                            setItems={setItems}
+                        />
+                        <Text style={estilo.mensagemError}>{statusError == 'tipoMedida' ? mensagemError : ''}</Text>
 
-              <Text style={estilos.modalSubTitulo}>Codigo*</Text>
-              <TextInput
-                style={estilos.modalInput}
-                onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="codigo do produto"
-                value={cliente} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <Text style={estilos.modalSubTitulo}>Nome do produto*</Text>
-              <TextInput
-                style={estilos.modalInput}
-                onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="Digite o nome do produto"
-                value={cliente} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <Text style={estilos.modalSubTitulo}>Categoria*</Text>
-              <TextInput
-                style={estilos.modalInput}
-                onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="selecione a categoria"
-                value={cliente} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <Text style={estilos.modalSubTitulo}>Preço de venda</Text>
-              <TextInput
-                style={estilos.modalInput}
-                multiline={true}
-                onChangeText={novoDescricao => setDescricao(novoDescricao)}
-                placeholder="Digite aqui a descrição"
-                value={descricao} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <View style={estilos.modalBotoes}>
-                <TouchableOpacity style={estilos.modalBotaoSalvar} onPress={() => { salvar() }}>
-                  <Text style={estilos.modalBotaoTexto}>Salvar</Text>
-                </TouchableOpacity>
-                {tarefaParaAtualizar ?
-                  <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => { excluir() }}>
-                    <Text style={estilos.modalBotaoTexto}>Excluir</Text>
-                  </TouchableOpacity> : <></>
-                }
-                <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => { limpaModal() }}>
-                  <Text style={estilos.modalBotaoTexto}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </ScrollView>
-        </View>
-      </Modal>
-      <TouchableOpacity onPress={() => { setModalVisivel(true) }} style={estilos.adicionarMemo}>
-        <Text style={estilos.adicionarMemoTexto}>+</Text>
-      </TouchableOpacity>
-    </>
-  )
+                        <View style={estilo.adicionarProdutoArea}>
+                            <View>
+                                <Text style={estilo.modalSubTitulo}>Selecione o produto desejado:</Text>
+                                <DropDownPicker
+                                    style={estilo.dropDownPickerMenor}
+                                    open={open}
+                                    value={value}
+                                    items={items2}
+                                    searchable={true}
+                                    dropDownDirection="TOP"
+                                    language="PT"
+                                    setOpen={setOpen}
+                                    setValue={setValue}
+                                    setItems={setItems2}
+                                />
+                            </View>
+                            <TouchableOpacity style={estilo.botaoIncluir} onPress={() => { limpaModal() }}>
+                                <Text style={estilo.texto}>incluir</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={estilo.areaListaDeProduto}>
+                            <FlatList
+                                data={vendas}
+                                keyExtractor={item => Math.random()}
+                                renderItem={({ item }) => <ListaComposicao item={item} />}
+                                showsVerticalScrollIndicator={false}
+                            />
+                        </View>
+                        <View style={estilo.modalBotoes}>
+                            <TouchableOpacity style={estilo.modalBotaoSalvar} onPress={() => { salvar() }}>
+                                <Text style={estilo.modalBotaoTexto}>Salvar</Text>
+                            </TouchableOpacity>
+                            {tarefaParaAtualizar ?
+                                <TouchableOpacity style={estilo.modalBotaoCancelar} onPress={() => { excluir() }}>
+                                    <Text style={estilo.modalBotaoTexto}>Excluir</Text>
+                                </TouchableOpacity> : <></>
+                            }
+                            <TouchableOpacity style={estilo.modalBotaoCancelar} onPress={() => { limpaModal() }}>
+                                <Text style={estilo.modalBotaoTexto}>Cancelar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+            <TouchableOpacity onPress={() => { setModalVisivel(true) }} style={estilo.adicionarMemo}>
+                <Text style={estilo.adicionarMemoTexto}>+</Text>
+            </TouchableOpacity>
+        </>
+    )
 }
 
-const estilos = StyleSheet.create({
-  centralizaModal: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "flex-end"
-  },
-  modal: {
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 32,
-    marginTop: 8,
-    marginHorizontal: 16,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-    elevation: 10,
-  },
-  modalTitulo: {
-    color: '#15AABF',
-    fontSize: 28,
-    fontWeight: "600",
-    marginBottom: 18,
-  },
-  modalInput: {
-    fontSize: 18,
-    marginBottom: 12,
-    paddingHorizontal: 4,
-    borderBottomWidth: 1,
-    borderBottomColor: '#15AABF',
-  },
-  modalHorario: {
-    alignItems: "center",
-    minWidth: 250,
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  modalHorarioTexto: {
-    fontSize: 28,
-
-  },
-  modalSubTitulo: {
-    fontSize: 14,
-    fontWeight: "600"
-  },
-  tituloHorario: {
-    fontSize: 14,
-    marginTop: 12,
-    fontWeight: "600"
-  },
-  mensagemError: {
-    fontSize: 12,
-    color: '#ff0000',
-    marginBottom: 8,
-    fontWeight: "600"
-  },
-  modalBotoes: {
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  modalBotaoSalvar: {
-    backgroundColor: "#3f9e1c",
-    borderRadius: 5,
-    padding: 8,
-    width: 80,
-    alignItems: "center",
-  },
-  modalBotaoDeletar: {
-    backgroundColor: "#e04141",
-    borderRadius: 5,
-    padding: 8,
-    width: 80,
-    alignItems: "center",
-  },
-  modalBotaoCancelar: {
-    backgroundColor: "#2975c6",
-    borderRadius: 5,
-    padding: 8,
-    width: 80,
-    alignItems: "center",
-  },
-  modalBotaoTexto: {
-    color: "#FFFFFF",
-  },
-  adicionarMemo: {
-    height: 64,
-    width: 64,
-    margin: 24,
-    backgroundColor: "#FAB005",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 100,
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4,
-  },
-  adicionarMemoTexto: {
-    fontSize: 32,
-    lineHeight: 40,
-    color: "#FFFFFF",
-  },
-  lettieOK: {
-    width: '80%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: "absolute",
-  }
-});

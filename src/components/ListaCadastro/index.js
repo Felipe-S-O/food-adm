@@ -33,7 +33,7 @@ export function ListaCadastro({ item, tabela, setItemSelecionado }) {
             <Text style={estilo.texto} >{item.categoria}</Text>
             <View style={estilo.textoContainer}>
               <Text style={estilo.texto2}>COD: {item.codigo}</Text>
-              <CheckboxPesonalisado texto=" Ativo" cor="#FAB005" flexDirection='row' value={item.ativo} />
+              <CheckboxPesonalisado texto=" Ativa" cor="#FAB005" flexDirection='row' value={item.ativo} />
               <CheckboxPesonalisado texto=" Visivel" cor="#FAB005" flexDirection='row' value={item.visivel} />
             </View>
           </View>

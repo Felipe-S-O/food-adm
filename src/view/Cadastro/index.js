@@ -9,7 +9,6 @@ import { StatusBar } from 'react-native';
 export default () => {
 
     const { temaEscolhido } = useContext(TemaContext);
-
     const estilo = estilos(temaEscolhido)
     const botoes = ['produtos', 'categorias', 'combos', 'formasDePagamentos', 'clientes', 'fornecedores']
 

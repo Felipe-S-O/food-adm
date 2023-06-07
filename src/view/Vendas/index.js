@@ -1,9 +1,10 @@
-import { View, Text, Image, FlatList } from 'react-native'
+import { View, FlatList, StatusBar } from 'react-native'
 import { TemaContext } from "../../contexts/TemaContext";
 import { Venda } from '../../components/Venda'
 import { vendas } from './vendas';
 import React, { useContext } from "react";
 import { estilos } from './estilos'
+import Topo from '../../components/Topo';
 
 export default () => {
 
@@ -13,13 +14,8 @@ export default () => {
 
     return (
         <View style={estilo.container}>
-            <View style={estilo.topoArea} >
-                <Text style={estilo.textoTopo}>Vendas</Text>
-                <Image
-                    source={require('../../assets/inottec-food-branco.png')}
-                    style={estilo.imageTopo}
-                />
-            </View>
+            <StatusBar barStyle='dark-content' backgroundColor='#15AABF' />
+            <Topo texto='Vendas' />
             <View style={estilo.vendaArea}>
                 <FlatList
                     data={vendas}

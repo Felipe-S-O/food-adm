@@ -9,6 +9,7 @@ import { Value } from 'react-native-reanimated';
 import { Carrossel } from '../../components/Carrossel';
 import { VictoryChart, VictoryLine, VictoryPie } from 'victory-native';
 import { StatusBar } from 'react-native';
+import Topo from '../../components/Topo';
 
 export default function Dashboaed() {
 
@@ -19,35 +20,27 @@ export default function Dashboaed() {
     return <>
         <View style={estilo.container}>
             <StatusBar barStyle='dark-content' backgroundColor='#15AABF' />
-            <View style={estilo.topoArea} >
-                <Text style={estilo.textoTopo}>Dashboaed</Text>
-                <Image
-                    source={require('../../assets/inottec-food-branco.png')}
-                    style={estilo.imageTopo}
-                />
-            </View>
+            <Topo texto='Dashboaed' />
             <View style={estilo.carrosselArea}>
                 <Text style={estilo.textoCarrossel}>Vendas</Text>
                 <Text style={estilo.valorCarrossel}>R$: 14.485,52</Text>
                 <Text style={estilo.tituloCarrossel}>Dashboaed</Text>
-                <Carrossel data={itens} />
+            </View >
+            <Carrossel data={itens} />
 
-                <View>
-                    <VictoryChart>
-                        <VictoryLine
-                            data={[
-                                { x: 1, y: 2 },
-                                { x: 2, y: 3 },
-                                { x: 3, y: 5 },
-                                { x: 4, y: 4 },
-                                { x: 5, y: 6 }
-                            ]}
-                        />
-                    </VictoryChart>
-                </View>
-
+            <View>
+                <VictoryChart>
+                    <VictoryLine
+                        data={[
+                            { x: 1, y: 2 },
+                            { x: 2, y: 3 },
+                            { x: 3, y: 5 },
+                            { x: 4, y: 4 },
+                            { x: 5, y: 6 }
+                        ]}
+                    />
+                </VictoryChart>
             </View>
-
         </View>
 
     </>

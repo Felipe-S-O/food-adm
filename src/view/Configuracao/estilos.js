@@ -5,42 +5,36 @@ export const estilos = (tema) => {
   return StyleSheet.create({
     container: {
       flex: 1,
+      alignItems: 'center',
+      backgroundColor: tema.tema
+    },
+    sairArea: {
+      width: '90%',
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      alignItems: "center",
       backgroundColor: tema.tema,
-      alignItems: 'center',
-      justifyContent: 'center',
     },
-    tituloArea: {
-      width: '100%',
+    botao: {
+      flexDirection: "row",
       alignItems: 'center',
-      flexDirection: 'row',
-      backgroundColor: tema.tema,
-      position: "absolute",
-      marginBottom: 14,
-      top: 0,
-    },
-    imageTopo: {
-      height: 42,
-      width: 90,
-      alignItems: 'center',
-      marginEnd: '-14%'
-
-    },
-    topoArea: {
-      width: '100%',
-      alignItems: 'center',
-      flexDirection: 'row',
-      backgroundColor: tema.tema ,
-      justifyContent: 'space-around',
-      position: "absolute",
       padding: 5,
-      top: 0,
+      backgroundColor: tema.fundoBotao,
+      borderRadius: 10,
+      shadowColor: tema.borda,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
     },
-    textoTopo: {
-      fontSize: 18,
-      fontWeight: 'bold',
-      color: tema.texto,
-      marginLeft: -50,
-      alignItems: 'center',
+    botaoTexto: {
+      fontWeight: "700",
+      fontFamily: "Roboto",
+      fontSize: 12,
+      color: tema.cor2,
     },
     switchArea: {
       flexDirection: "row",
@@ -50,52 +44,35 @@ export const estilos = (tema) => {
       marginHorizontal: 16,
       marginVertical: 8,
       padding: 16,
-     // backgroundColor: tema.fundo,
+      backgroundColor: tema.tema,
+      backgroundColor: tema.fundoBotao,
       borderRadius: 10,
-     // borderBottomWidth: 1,
-      //borderBottomColor: "#CBA122",
-     // borderTopWidth: 1,
-     // borderTopColor: "#CBA122",
-      top: '-58%',
-    },
-    switch: {
-      width: '45%',
-      marginLeft: '38%',
-      marginEnd: '30%',
+      shadowColor: tema.borda,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
     },
     textoSwitch: {
       fontSize: 18,
       fontWeight: 'bold',
-      color: tema.tema,
+      color: tema.cor1,
       alignItems: 'center',
-      marginLeft: '22%',
+      marginLeft: '28%',
     },
-    pickerarea: {
-      flexDirection: "row",
-      justifyContent: "space-between",
-      alignItems: "center",
-      minWidth: 20,
-      marginHorizontal: 16,
-      marginVertical: 8,
-      padding: 16,
-      backgroundColor: tema.fundo,
-      top: '-66%',
-    },
-    textoPicker: {
+    textoTema: {
       fontSize: 18,
       fontWeight: 'bold',
-      color: tema.tema,
+      color: tema.cor2,
       alignItems: 'center',
-      marginLeft: '30%',
     },
-    picker: {
-      width: '60%',
-     // backgroundColor:  tema.fundoBotao,
-      marginLeft: '24%',
+    switch: {
+      width: '45%',
+      marginLeft: '20%',
       marginEnd: '30%',
-    },
-    itemPicker: {
-      color: tema.tema,
     }
   })
 
