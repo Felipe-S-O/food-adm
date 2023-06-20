@@ -1,17 +1,15 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native"
+import { Modal, View, Text, TextInput, TouchableOpacity, ScrollView } from "react-native"
 import { EmpresaContext } from "../../contexts/EmpresaContext";
 import CheckboxPesonalisado from "../CheckboxPesonalisado";
 import { TemaContext } from "../../contexts/TemaContext";
 import { estilos } from './estilos'
 import { atualizar, salvarItem } from "../../server/firestore";
-import LottieView from 'lottie-react-native';
-import lottiOK from '../../assets/ok.json'
 import { Alerta } from "../Alerta";
 import Button from "../Button";
 
 
-export default function CategoriaModal({ itemSelecionado, setItemSelecionado, codigo }) {
+export default function CategoriaModal({ itemSelecionado, setItemSelecionado, codigo, setLottieOK }) {
 
   useEffect(() => {
     if (itemSelecionado.id) {
@@ -29,24 +27,23 @@ export default function CategoriaModal({ itemSelecionado, setItemSelecionado, co
   const [categoria, setCategoria] = useState('')
   const [modalVisivel, setModalVisivel] = useState(false)
   const [categoriaParaAtualizar, setCategoriaParaAtualizar] = useState(false)
-  const [lottieOK, setLottieOK] = useState(0)
   const [mensagemError, setMensagemError] = useState("");
   const [statusError, setStatusError] = useState("");
-  const [ativo, setAtivo] = useState('')
+  const [ativa, setAtiva] = useState('')
   const [visivel, setVisivel] = useState('')
   const tabela = ('categorias')
 
   function editarItem() {
     setCodigoAtual(itemSelecionado.codigo)
     setCategoria(itemSelecionado.categoria)
-    setAtivo(itemSelecionado.ativo)
+    setAtiva(itemSelecionado.ativo)
     setVisivel(itemSelecionado.visivel)
   }
 
   function limpaModal() {
     setCodigoAtual(null)
     setCategoria('')
-    setAtivo(false)
+    setAtiva(false)
     setVisivel(false)
     setStatusError('')
     setModalVisivel(false)
@@ -56,13 +53,11 @@ export default function CategoriaModal({ itemSelecionado, setItemSelecionado, co
 
   async function salvar() {
     let resultado
-
-
     if (categoriaParaAtualizar) {
       resultado = await atualizar(itemSelecionado.id, {
         codigo: codigoAtual,
         categoria: categoria,
-        ativo: ativo,
+        ativo: ativa,
         visivel: visivel,
         idEmpresa: idEmpresa
       }, tabela)
@@ -70,7 +65,7 @@ export default function CategoriaModal({ itemSelecionado, setItemSelecionado, co
       resultado = await salvarItem({
         codigo: codigo,
         categoria: categoria,
-        ativo: ativo,
+        ativo: ativa,
         visivel: visivel,
         idEmpresa: idEmpresa
       }, tabela)
@@ -140,7 +135,7 @@ export default function CategoriaModal({ itemSelecionado, setItemSelecionado, co
 
 
               <View style={[estilo.checkbox, { marginBottom: 28 }]}>
-                <CheckboxPesonalisado texto=" Ativa" cor="#FAB005" flexDirection='row' botaoAtivo={true} value={ativo} setValue={setAtivo} />
+                <CheckboxPesonalisado texto=" Ativa" cor="#FAB005" flexDirection='row' botaoAtivo={true} value={ativa} setValue={setAtiva} />
                 <CheckboxPesonalisado texto=" Visivel" cor="#FAB005" flexDirection='row' botaoAtivo={true} value={visivel} setValue={setVisivel} />
               </View>
 
@@ -157,15 +152,6 @@ export default function CategoriaModal({ itemSelecionado, setItemSelecionado, co
           </ScrollView>
         </View>
       </Modal>
-      {lottieOK == 1 ?
-        <LottieView
-          style={estilos.lettieOK}
-          source={lottiOK}
-          loop={false}
-          autoPlay={true}
-          onAnimationFinish={tempo()}
-        /> : <></>
-      }
       <TouchableOpacity onPress={() => { setModalVisivel(true) }} style={estilo.adicionarMemo}>
         <Text style={estilo.adicionarMemoTexto}>+</Text>
       </TouchableOpacity>

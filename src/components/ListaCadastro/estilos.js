@@ -28,7 +28,7 @@ export const estilos = (tema) => {
       marginHorizontal: 16,
     },
     textoContainer: {
-      width: (width - 12) / 1.6,
+      width: (width - 12) / 1.4,
       alignItems: "center",
       flexDirection: "row",
       justifyContent: "space-between",

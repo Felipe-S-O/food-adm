@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Feather } from 'react-native-vector-icons'
+import { FontAwesome, Feather } from '@expo/vector-icons'
 import { TemaContext } from '../contexts/TemaContext';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { estilos } from './estilos'
@@ -22,16 +22,16 @@ export default function TabNavigation() {
 
     return <>
         <Tab.Navigator
-            initialRouteName='DashboardBar'
+            initialRouteName='Dashboard'
             screenOptions={{
                 headerShown: false,
                 tabBarActiveTintColor: '#2ECBD2',
                 tabBarStyle: estilo.tabBar,
             }}
         >
-            <Tab.Screen name="Vendas" component={Vendas} options={{
+            <Tab.Screen name="Financeiro" component={Vendas} options={{
                 tabBarIcon: ({ color }) => (
-                    <Feather name="tag" size={22} color={color} />
+                    <Feather name="dollar-sign" size={22} color={color} />
                 ),
             }} />
 
@@ -41,15 +41,16 @@ export default function TabNavigation() {
                 ),
             }} />
 
-            <Tab.Screen name="DashboardBar" component={Dashboard} options={{
+            <Tab.Screen name="Dashboard" component={Dashboard} options={{
                 tabBarIcon: ({ color }) => (
-                    <Feather name="dollar-sign" S size={22} color={color} />
+                   
+                    <FontAwesome name="bar-chart"  size={22} color={color} />
                 ),
             }} />
 
             <Tab.Screen name="Estoque" component={Estoque} options={{
                 tabBarIcon: ({ color }) => (
-                    <Feather name="package" size={22} color={color}  />
+                    <Feather name="package" size={22} color={color} />
                 ),
             }} />
 

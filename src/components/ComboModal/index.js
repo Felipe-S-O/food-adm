@@ -7,6 +7,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { vendas } from "./vendas";
 import { ListaComposicao } from "../ListaComposicao";
 import { MenuCombo } from "../MenuCombo";
+import { Venda } from "../Venda";
 
 export default function ComboModal({ }) {
 
@@ -156,7 +157,7 @@ export default function ComboModal({ }) {
                             <FlatList
                                 data={vendas}
                                 keyExtractor={item => Math.random()}
-                                renderItem={({ item }) => <ListaComposicao item={item} />}
+                                renderItem={({ item }) => <Venda item={item} />}
                                 showsVerticalScrollIndicator={false}
                             />
                         </View>

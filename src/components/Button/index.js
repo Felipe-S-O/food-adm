@@ -4,6 +4,7 @@ import { estilos } from "../Button/estilos";
 import { TemaContext } from "../../contexts/TemaContext";
 import { ActivityIndicator } from "react-native-paper";
 
+
 export default function Button({ title, onPress, isLoading = false }) {
 
 
@@ -13,9 +14,9 @@ export default function Button({ title, onPress, isLoading = false }) {
 
 
     return (
-        <TouchableOpacity style={title== 'Salvar'? estilo.modalBotaoSalvar : estilo.modalBotaoCancelar} onPress={onPress}>
+        <TouchableOpacity style={title == 'Salvar' ? estilo.modalBotaoSalvar : estilo.modalBotaoCancelar} disabled={isLoading} onPress={onPress}>
             {isLoading ?
-               <ActivityIndicator color="#FFF"/>
+                <ActivityIndicator color="#FFF" />
                 :
                 <Text style={estilo.textoBotao}>{title}</Text>
             }

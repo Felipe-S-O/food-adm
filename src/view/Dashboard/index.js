@@ -19,7 +19,7 @@ export default function Dashboaed() {
 
     return <>
         <View style={estilo.container}>
-            <StatusBar barStyle='dark-content' backgroundColor='#15AABF' />
+            <StatusBar barStyle='dark-content' backgroundColor='#139fb2' />
             <Topo texto='Dashboaed' />
             <View style={estilo.carrosselArea}>
                 <Text style={estilo.textoCarrossel}>Vendas</Text>

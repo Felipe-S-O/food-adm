@@ -1,5 +1,5 @@
 import { Text, View, TouchableOpacity, FlatList } from 'react-native';
-import { buscaListaInsumo } from '../../server/firestore';
+import { buscaDuasCondicoes } from '../../server/firestore';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { TemaContext } from "../../contexts/TemaContext";
 import { useContext, useEffect, useState } from 'react';
@@ -7,7 +7,13 @@ import { ListaComposicao } from '../ListaComposicao';
 import CampoTexto from '../CampoTexto';
 import { estilos } from './estilos'
 
-export function Composicao({ idEmpresa, itemsComposicao, setItemsComposicao }) {
+export function Composicao({ codigo, idEmpresa, itemsComposicao, setItemsComposicao, setMenu, alterarMenu }) {
+
+    useEffect(() => {
+        if (alterarMenu == 'geral' || alterarMenu == 'promoção') {
+            setMenu(alterarMenu)
+        }
+    }, [alterarMenu])
 
     const { temaEscolhido } = useContext(TemaContext);
     const estilo = estilos(temaEscolhido)
@@ -21,14 +27,15 @@ export function Composicao({ idEmpresa, itemsComposicao, setItemsComposicao }) {
     const [lista, setLista] = useState([]);
 
     useEffect(() => {
-        const tabela = ('produtos')
-        buscaListaInsumo(setLista, tabela, idEmpresa)
+        buscaDuasCondicoes(setLista, 'produtos', idEmpresa, 'insumo', true)
     }, [])
 
     useEffect(() => {
         let produtos = []
         lista.forEach(function (doc) {
-            if (lista.length > 0) {
+            if (doc.codigo == codigo) {
+                // pula array
+            } else {
                 produtos.push({ label: doc.produto, value: doc.codigo })
             }
         })
@@ -53,23 +60,24 @@ export function Composicao({ idEmpresa, itemsComposicao, setItemsComposicao }) {
         } else {
             let listaDeProdutos = []
             let codigoProduto
+            let preco
+            if (lista.length > 0) {
+                lista.forEach(function (doc) {
+                    if (doc.codigo == produtoSelecionado) {
+                        codigoProduto = doc.codigo
+                        preco = quantidade * doc.preco
+                        listaDeProdutos.push({ codigo: doc.codigo, produto: doc.produto, preco: preco, quantidade: quantidade })
+                    }
+                })
 
-            lista.forEach(function (doc) {
-                if (doc.codigo == produtoSelecionado) {
-                    codigoProduto = doc.codigo
-                    listaDeProdutos.push({ codigo: doc.codigo, produto: doc.produto, preco: doc.preco, quantidade: quantidade })
-                }
-            })
-
-            itemsComposicao.forEach(function (doc) {
-                if (itemsComposicao.length > 0) {
+                itemsComposicao.forEach(function (doc) {
                     if (doc.codigo == codigoProduto) {
                         // pula array
                     } else {
                         listaDeProdutos.push(doc)
                     }
-                }
-            })
+                })
+            }
             setItemsComposicao(listaDeProdutos)
             limpaModal()
         }
@@ -117,7 +125,7 @@ export function Composicao({ idEmpresa, itemsComposicao, setItemsComposicao }) {
                     mensagemError={statusError == 'quantidade' ? mensagemError : ''}
                     setValue={setQuantidade}
                     value={quantidade}
-                    tipo='numeric'
+                    tipo='qtd'
                     descricao="Digite aqui a quantidade"
                 />
                 <TouchableOpacity style={estilo.botaoAdicionar} onPress={() => { adicionar() }}>

@@ -20,7 +20,7 @@ export default props => (
         <Stack.Screen name="Inicia" component={Inicio}/>
         <Stack.Screen name="Login" component={Login}/>
         <Stack.Screen name="ListaDeCadastro" component={ListaDeCadastro} />
-        <Stack.Screen name="Dashboard" component={TabNavigation}/>
+        <Stack.Screen name="DashboardStack" component={TabNavigation}/>
         <Stack.Screen name="LancamentoStack" component={LancamentoNavigation} />
     </Stack.Navigator>
 

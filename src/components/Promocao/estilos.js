@@ -28,7 +28,7 @@ export const estilos = (tema) => {
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
       elevation: 5,
-    },   
+    },
     texto: {
       fontSize: 14,
       fontWeight: "700",
@@ -36,7 +36,14 @@ export const estilos = (tema) => {
     textoInformacao: {
       color: "#5E9B71",
       fontWeight: "700",
-    },   
-   
+    },
+    mensagemError: {
+      fontSize: 12,
+      color: '#ff0000',
+      fontWeight: "600",
+      marginTop: -18,
+      marginLeft: 20,
+    },
+
   })
 }

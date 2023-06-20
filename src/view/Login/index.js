@@ -1,5 +1,5 @@
 import { View, Text, StatusBar, TouchableOpacity, LayoutAnimation, } from 'react-native';
-import AgendaAnimacao from '../../assets/agenda-animacao.json'
+import Food from '../../assets/food.json'
 import { EntradaTexto } from '../../components/EntradaTexto';
 import FundoOndulado from '../../components/FundoOndulado';
 import { useNavigation } from '@react-navigation/native';
@@ -24,7 +24,6 @@ export default function Login() {
   const { idEmpresa } = useContext(EmpresaContext);
   const [idAmpresaAtual, setIdEmpresaAtual] = useState("vazio2");
   const [empresa, setEmpresa] = useState([]);
-
   const [fazerLogin, setFazerLogin] = useState(false);
   const [altura, setAltura] = useState(250);
   const [email, setEmail] = useState("");
@@ -36,10 +35,9 @@ export default function Login() {
     const estadoUsurio = auth.onAuthStateChanged(
       usuario => {
         if (usuario) {
-          navigation.replace('Dashboard');
+          navigation.replace('DashboardStack');
         }
       })
-
     estadoUsurio();
     pegarEmpresaTempoReal(setEmpresa)
   }, [])
@@ -49,7 +47,6 @@ export default function Login() {
       empresa.forEach(function (empresa) {
         if (empresa.id == idEmpresa) {
           setIdEmpresaAtual(empresa.id)
-          console.log(empresa.id)
         }
       })
     }
@@ -87,7 +84,6 @@ export default function Login() {
   LayoutAnimation.configureNext(animacaoCustomizada);
 
   function avancar() {
-
     if (idEmpresa == idAmpresaAtual) {
       LayoutAnimation.linear();
       setAltura(390);
@@ -101,11 +97,11 @@ export default function Login() {
   return (
 
     <View style={estilo.container}>
-      <StatusBar barStyle='dark-content' backgroundColor='#15AABF' />
+      <StatusBar barStyle='dark-content' backgroundColor='#139fb2'/>
       <Empresa />
       <LottieView
         style={estilo.atendenteImg}
-        source={AgendaAnimacao}
+        source={Food}
         loop={true}
         autoPlay={true}
       />

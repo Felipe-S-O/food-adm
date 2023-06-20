@@ -2,17 +2,20 @@ import React from 'react';
 import { View, Text, Dimensions } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import styles from './styles';
+const { width, height } = Dimensions.get('window')
 
-export default function FundoOndulado({ children, height=250 }) {
+export default function FundoOndulado({ children, height = 250 }) {
   return (
     <View style={[styles.container, { height: height }]}>
       <Svg
-        height={85}
-        width={Dimensions.get('screen').width}
+        height={98}
+
+        width={width}
         viewBox="0 0 1440 320"
         style={{
           position: 'absolute',
           bottom: height,
+          marginBottom: -6,
         }}
       >
         <Path

@@ -1,32 +1,112 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native"
+import { Modal, View, Text, TextInput, TouchableOpacity } from "react-native"
+import { TemaContext } from "../../contexts/TemaContext";
 import { EmpresaContext } from "../../contexts/EmpresaContext";
+import { estilos } from './estilos'
+import DropDownPicker from "react-native-dropdown-picker";
+import CheckboxPesonalisado from "../CheckboxPesonalisado";
+import { atualizar, salvarItem } from "../../server/firestore";
+import Button from "../Button";
 
+export default function FormaPagModal({ itemSelecionado, setItemSelecionado, codigo, setLottieOK }) {
 
-export default function FormaPagModal({ }) {
+  useEffect(() => {
+    if (itemSelecionado.id) {
+      editarItem()
+      setModalVisivel(true)
+      setPagtoParaAtualizar(true)
+    }
+  }, [itemSelecionado])
 
+  const { temaEscolhido } = useContext(TemaContext);
+  const estilo = estilos(temaEscolhido)
 
   const { idEmpresa } = useContext(EmpresaContext)
-  const [cliente, setCliente] = useState('')
-  const [horarioAtual, setHorarioAtual] = useState('')
-  const [minutos, setMinutos] = useState('')
-  const [idHorario, setIdHorario] = useState('')
+  const [codigoAtual, setCodigoAtual] = useState(null)
   const [descricao, setDescricao] = useState('')
+  const [comissao, setComissao] = useState('')
   const [modalVisivel, setModalVisivel] = useState(false)
-  const [modalSelecionaHorario, setModalSelecionaHorario] = useState(false)
-  const [tarefaParaAtualizar, setTarefaParaAtualizar] = useState(false)
-  const [lottieOK, setLottieOK] = useState(0)
+  const [pagtoParaAtualizar, setPagtoParaAtualizar] = useState(false)
+  const [loading, setIsLoading] = useState(false)
+  const [mensagemError, setMensagemError] = useState("");
   const [statusError, setStatusError] = useState('');
+  const [ativa, setAtiva] = useState(false)
+  const tabela = ('formasDePagamentos')
 
+  const [open, setOpen] = useState(false);
+  const [tipoPagto, setTipoPagto] = useState('');
+  const [items, setItems] = useState([
+    { label: 'Dinheiro', value: 'Dinheiro' },
+    { label: 'Cartão Crédito', value: 'Cartão Crédito' },
+    { label: 'Cartão Débito', value: 'Cartão Débito' },
+    { label: 'Outro', value: 'Outro' },
+  ]);
+
+  function editarItem() {
+    setCodigoAtual(itemSelecionado.codigo)
+    setAtiva(itemSelecionado.ativa)
+    setDescricao(itemSelecionado.descricao)
+    setTipoPagto(itemSelecionado.tipoPagto)
+    setComissao(itemSelecionado.comissao)
+  }
 
   function limpaModal() {
-    setCliente('')
+    setCodigoAtual('')
+    setAtiva(false)
     setDescricao('')
+    setTipoPagto('')
+    setOpen(false)
+    setComissao('')
     setStatusError('')
-    setMinutos('')
-    setHorarioAtual('')
     setModalVisivel(false)
-    setTarefaParaAtualizar(false)
+    setItemSelecionado(false)
+  }
+
+  async function salvar() {
+    let resultado
+    if (pagtoParaAtualizar) {
+      resultado = await atualizar(itemSelecionado.id, {
+        codigo: codigoAtual,
+        ativa: ativa,
+        descricao: descricao,
+        tipoPagto: tipoPagto,
+        comissao: comissao,
+        idEmpresa: idEmpresa
+      }, tabela)
+    } else {
+      resultado = await salvarItem({
+        codigo: codigo,
+        ativa: ativa,
+        descricao: descricao,
+        tipoPagto: tipoPagto,
+        comissao: comissao,
+        idEmpresa: idEmpresa
+      }, tabela)
+    }
+    setLottieOK(1)
+    limpaModal()
+
+    if (resultado === 'Error') {
+      setStatusError('firebase')
+      setMensagemError('Erro ao tentar salvar tarefa!');
+    }
+  }
+
+  function loadingBotao() {
+    if (descricao == '') {
+      setMensagemError('A forma de pagamento é obrigatório!');
+      setStatusError('descricao')
+    } else if (tipoPagto == '') {
+      setMensagemError('O Tipo de pagamento é obrigatório!');
+      setStatusError('tipoPagto')
+    } else {
+      setIsLoading(true)
+      salvar()
+      const intervalo = setInterval(() => {
+        setIsLoading(false)
+        clearInterval(intervalo);
+      }, 2000)
+    }
   }
 
   function tempo() {
@@ -36,7 +116,6 @@ export default function FormaPagModal({ }) {
     }, 2000)
   }
 
-
   return (
     <>
       <Modal
@@ -45,197 +124,69 @@ export default function FormaPagModal({ }) {
         visible={modalVisivel}
         onRequestClose={() => { setModalVisivel(false) }}
       >
-        <View style={estilos.centralizaModal}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={estilos.modal}>
-              <Text style={estilos.modalTitulo}>Criar forma de pagamento</Text>
-
-              <Text style={estilos.modalSubTitulo}>Codigo*</Text>
-              <TextInput
-                style={estilos.modalInput}
-                onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="***"
-                value={cliente} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <Text style={estilos.modalSubTitulo}>Nome:</Text>
-              <TextInput
-                style={estilos.modalInput}
-                onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="Digite o nome"
-                value={cliente} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <Text style={estilos.modalSubTitulo}>Tipo Pagto:</Text>
-              <TextInput
-                style={estilos.modalInput}
-                onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="selecione o tipo"
-                value={cliente} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <Text style={estilos.modalSubTitulo}>Comissão:</Text>
-              <TextInput
-                style={estilos.modalInput}
-                multiline={true}
-                onChangeText={novoDescricao => setDescricao(novoDescricao)}
-                placeholder="%0,0"
-                value={descricao} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <View style={estilos.modalBotoes}>
-                <TouchableOpacity style={estilos.modalBotaoSalvar} onPress={() => { salvar() }}>
-                  <Text style={estilos.modalBotaoTexto}>Salvar</Text>
-                </TouchableOpacity>
-                {tarefaParaAtualizar ?
-                  <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => { excluir() }}>
-                    <Text style={estilos.modalBotaoTexto}>Excluir</Text>
-                  </TouchableOpacity> : <></>
+        <View style={estilo.centralizaModal}>
+          <View style={estilo.modal}>
+            <Text style={estilo.modalTitulo}>Criar forma de pagamento</Text>
+            <View style={estilo.areaCodigo}>
+              <View>
+                <Text style={estilo.modalSubTitulo}>Codigo*</Text>
+                {(tipoPagto == 'Dinheiro') || (tipoPagto == '') ?
+                  <Text style={estilo.modalInput}>{codigo}</Text>
+                  :
+                  <Text style={estilo.modalInput}>{codigoAtual}</Text>
                 }
-                <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => { limpaModal() }}>
-                  <Text style={estilos.modalBotaoTexto}>Cancelar</Text>
-                </TouchableOpacity>
               </View>
+              <CheckboxPesonalisado texto=" Ativa" cor="#FAB005" flexDirection='row' botaoAtivo={true} value={ativa} setValue={setAtiva} />
             </View>
-          </ScrollView>
+
+            <Text style={estilo.modalSubTitulo}>Nome:</Text>
+            <TextInput
+              style={estilo.modalInput}
+              onChangeText={novoDescricao => setDescricao(novoDescricao)}
+              placeholder="Digite o nome"
+              value={descricao} />
+            <Text style={estilo.mensagemError}>{statusError == 'descricao' ? mensagemError : ''}</Text>
+
+            <Text style={estilo.modalSubTitulo}>Tipo Pagto:</Text>
+            <DropDownPicker
+              style={estilo.dropDownPicker}
+              open={open}
+              value={tipoPagto}
+              items={items}
+              searchable={true}
+              dropDownDirection="TOP"
+              language="PT"
+              setOpen={setOpen}
+              setValue={setTipoPagto}
+              setItems={setItems}
+            />
+            <Text style={estilo.mensagemError}>{statusError == 'tipoPagto' ? mensagemError : ''}</Text>
+            {(tipoPagto == 'Dinheiro') || (tipoPagto == '') ?
+              <View>
+                <Text style={estilo.modalSubTitulo}>Comissão:</Text>
+                <Text style={estilo.textoInputComissao}>%0,0</Text>
+              </View>
+              :
+              <View>
+                <Text style={estilo.modalSubTitulo}>Comissão:</Text>
+                <TextInput
+                  style={estilo.modalInput}
+                  multiline={true}
+                  onChangeText={novoComissao => setComissao(novoComissao)}
+                  placeholder="%0,0"
+                  value={comissao} />
+              </View>
+            }
+            <View style={estilo.modalBotoes}>
+              <Button title='Salvar' isLoading={loading} onPress={loadingBotao} />
+              <Button title='Cancelar' onPress={limpaModal} />
+            </View>
+          </View>
         </View>
       </Modal>
-      <TouchableOpacity onPress={() => { setModalVisivel(true) }} style={estilos.adicionarMemo}>
-        <Text style={estilos.adicionarMemoTexto}>+</Text>
+      <TouchableOpacity onPress={() => { setModalVisivel(true) }} style={estilo.adicionarMemo}>
+        <Text style={estilo.adicionarMemoTexto}>+</Text>
       </TouchableOpacity>
     </>
   )
 }
-
-const estilos = StyleSheet.create({
-  centralizaModal: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "flex-end"
-  },
-  modal: {
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 32,
-    marginTop: 8,
-    marginHorizontal: 16,
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-    elevation: 10,
-  },
-  modalTitulo: {
-    color: '#15AABF',
-    fontSize: 28,
-    fontWeight: "600",
-    marginBottom: 18,
-  },
-  modalInput: {
-    fontSize: 18,
-    marginBottom: 12,
-    paddingHorizontal: 4,
-    borderBottomWidth: 1,
-    borderBottomColor: '#15AABF',
-  },
-  modalHorario: {
-    alignItems: "center",
-    minWidth: 250,
-    padding: 10,
-    marginBottom: 10,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  modalHorarioTexto: {
-    fontSize: 28,
-
-  },
-  modalSubTitulo: {
-    fontSize: 14,
-    fontWeight: "600"
-  },
-  tituloHorario: {
-    fontSize: 14,
-    marginTop: 12,
-    fontWeight: "600"
-  },
-  mensagemError: {
-    fontSize: 12,
-    color: '#ff0000',
-    marginBottom: 8,
-    fontWeight: "600"
-  },
-  modalBotoes: {
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  modalBotaoSalvar: {
-    backgroundColor: "#3f9e1c",
-    borderRadius: 5,
-    padding: 8,
-    width: 80,
-    alignItems: "center",
-  },
-  modalBotaoDeletar: {
-    backgroundColor: "#e04141",
-    borderRadius: 5,
-    padding: 8,
-    width: 80,
-    alignItems: "center",
-  },
-  modalBotaoCancelar: {
-    backgroundColor: "#2975c6",
-    borderRadius: 5,
-    padding: 8,
-    width: 80,
-    alignItems: "center",
-  },
-  modalBotaoTexto: {
-    color: "#FFFFFF",
-  },
-  adicionarMemo: {
-    height: 64,
-    width: 64,
-    margin: 24,
-    backgroundColor: "#FAB005",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 100,
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
-    elevation: 4,
-  },
-  adicionarMemoTexto: {
-    fontSize: 32,
-    lineHeight: 40,
-    color: "#FFFFFF",
-  },
-  lettieOK: {
-    width: '80%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: "absolute",
-  }
-});

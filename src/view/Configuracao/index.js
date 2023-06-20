@@ -34,7 +34,7 @@ export default function Configuracoes() {
                 <View style={estilo.sairArea}>
                     <TouchableOpacity style={estilo.botao} onPress={() => deslogar()} >
                         <Text style={estilo.botaoTexto}>sair </Text>
-                        <Feather text='sair' name="log-out" size={32} color="#FAB005" />
+                        <Feather text='sair' name="log-out" size={32} color="#139fb2" />
                     </TouchableOpacity>
                 </View>
                 <View style={estilo.switchArea}>

@@ -30,8 +30,22 @@ export const estilos = (tema) => {
       fontWeight: "700",
     },
     textoInformacao: {
+      fontSize: 12,
       color: "#5E9B71",
-      marginLeft: 10,
+      marginLeft: 8,
+      marginTop:4,
+      marginBottom: -6,
+      padding: 2,
+      backgroundColor: "#FFFFFF",
+      borderRadius: 5,
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 4,
     },
     seta: {
       fontSize: 18,

@@ -8,8 +8,8 @@ export default function DateTime({ horarioTexto, setHorarioAtual, setDataAtual, 
     const [mode, setMode] = useState(tipo);
     const [show, setShow] = useState(false);
     const [data, setData] = useState('');
-    const [horario, setHorario] = useState(horarioTexto);
-
+    const [horario, setHorario] = useState("-- : --");
+ 
     useEffect(() => {
         let tempDate = new Date();
         let fDate
@@ -80,7 +80,7 @@ export default function DateTime({ horarioTexto, setHorarioAtual, setDataAtual, 
         }
 
         setHorarioAtual(fTime)
-        setHorario(fTime)
+        // setHorario(fTime)
     }
 
     const showMode = (currentMode) => {
@@ -96,10 +96,12 @@ export default function DateTime({ horarioTexto, setHorarioAtual, setDataAtual, 
                     <TouchableOpacity onPress={() => showMode('date')} style={estilos.button}>
                         <Text style={estilos.text}>{data + ' 📆'}</Text>
                     </TouchableOpacity>
-                    :
-                    <TouchableOpacity onPress={() => showMode('time')} style={estilos.botao}>
-                        <Text style={estilos.text}>{horario}</Text>
-                    </TouchableOpacity>
+                    : horarioTexto == null ?
+                        <TouchableOpacity onPress={() => showMode('time')} style={estilos.botao}>
+                            <Text style={estilos.text}>{horario}</Text>
+                        </TouchableOpacity> : <TouchableOpacity onPress={() => showMode('time')} style={estilos.botao}>
+                            <Text style={estilos.text}>{horarioTexto}</Text>
+                        </TouchableOpacity>
                 }
             </View>
             {show && (

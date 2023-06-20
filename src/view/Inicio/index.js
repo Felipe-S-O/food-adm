@@ -24,7 +24,7 @@ export default function Inicio() {
     LayoutAnimation.spring();
     return (
         < View style={estilos.container}>
-            <StatusBar barStyle='dark-content' backgroundColor='#15AABF' />
+            <StatusBar barStyle='dark-content' backgroundColor='#139fb2'/>
             <Image
                 source={require('../../assets/inottecCompleto.gif')}
                 style={estilos.image}

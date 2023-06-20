@@ -38,8 +38,8 @@ export const estilos = (tema) => {
             fontWeight: "600"
         },
         listaComposicaoArea: {
-            maxHeight: 250,
-            minHeight: 250,
+            maxHeight: 300,
+            minHeight: 300,
             marginBottom: 28,
             borderRadius: 10,
             borderWidth: 1,

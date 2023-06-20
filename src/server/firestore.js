@@ -1,5 +1,5 @@
 import { db } from "../config/Firbase";
-import { collection, addDoc, doc, updateDoc, deleteDoc, query, where, onSnapshot} from "firebase/firestore";
+import { collection, addDoc, doc, updateDoc, deleteDoc, query, where, onSnapshot } from "firebase/firestore";
 
 export async function salvarItem(dados, tabela) {
     try {
@@ -17,7 +17,7 @@ export async function buscalista(setLista, tabela, idEmpresa) {
         onSnapshot(q, (querySnapshot) => {
             const lista = [];
             querySnapshot.forEach((doc) => {
-               lista.push({ id: doc.id, ...doc.data() });
+                lista.push({ id: doc.id, ...doc.data() });
             });
             setLista(lista)
         });
@@ -29,11 +29,11 @@ export async function buscalista(setLista, tabela, idEmpresa) {
 
 export async function buscaListaInsumo(setLista, tabela, idEmpresa) {
     try {
-        const q = query(collection(db, tabela), where('idEmpresa', "==", idEmpresa),where('insumo', "==", true));
+        const q = query(collection(db, tabela), where('idEmpresa', "==", idEmpresa), where('insumo', "==", true));
         onSnapshot(q, (querySnapshot) => {
             const lista = [];
             querySnapshot.forEach((doc) => {
-               lista.push({ id: doc.id, ...doc.data() });
+                lista.push({ id: doc.id, ...doc.data() });
             });
             setLista(lista)
         });
@@ -43,28 +43,16 @@ export async function buscaListaInsumo(setLista, tabela, idEmpresa) {
     }
 }
 
-export async function salvarHorario(dados, idEmpresa) {
-
+export async function buscaDuasCondicoes(setLista, tabela, idEmpresa, coluna, filtro) {
     try {
-        await addDoc(collection(db, 'horario:'+idEmpresa), dados)
-        return 'ok'
-    } catch (error) {
-        console.log('Erro add Horario: ', error)
-        return 'erro'
-    }
-}
-
-export async function pegarTarefaTempoReal(setTarefa, dataAtual, idEmpresa) {
-    try {
-        const ref = query(collection(db, 'tarefa:'+idEmpresa), where("data", "==", dataAtual))
-        onSnapshot(ref, (querySnapshot) => {
-            const tarefas = []
+        const q = query(collection(db, tabela), where('idEmpresa', "==", idEmpresa), where(coluna, "==", filtro));
+        onSnapshot(q, (querySnapshot) => {
+            const lista = [];
             querySnapshot.forEach((doc) => {
-                tarefas.push({ id: doc.id, ...doc.data() })
-            })
-            setTarefa(tarefas)
-            console.log(tarefas)
-        })
+                lista.push({ id: doc.id, ...doc.data() });
+            });
+            setLista(lista)
+        });
     } catch (error) {
         console.log(error)
         return []
@@ -90,7 +78,7 @@ export async function pegarEmpresaTempoReal(setEmpresa) {
 
 export async function atualizar(id, dados, tabela) {
     try {
-        const itemRef = doc(db, tabela, id );
+        const itemRef = doc(db, tabela, id);
         await updateDoc(itemRef, dados);
         return 'ok'
     } catch (error) {
@@ -101,7 +89,7 @@ export async function atualizar(id, dados, tabela) {
 
 export async function atualizarTarefa(id, dados, idEmpresa) {
     try {
-        const tarefaRef = doc(db, "tarefa:"+idEmpresa, id);
+        const tarefaRef = doc(db, "tarefa:" + idEmpresa, id);
         await updateDoc(tarefaRef, dados);
         return 'ok'
     } catch (error) {
@@ -112,7 +100,7 @@ export async function atualizarTarefa(id, dados, idEmpresa) {
 
 export async function excluirTarefa(id, idEmpresa) {
     try {
-        await deleteDoc(doc(db, "tarefa:"+idEmpresa, id));
+        await deleteDoc(doc(db, "tarefa:" + idEmpresa, id));
         return 'ok'
     } catch (error) {
         console.log(error)
@@ -120,12 +108,3 @@ export async function excluirTarefa(id, idEmpresa) {
     }
 }
 
-export async function excluirHorario(id, idEmpresa) {
-    try {
-        await deleteDoc(doc(db, "horario:"+idEmpresa, id));
-        return 'ok'
-    } catch (error) {
-        console.log(error)
-        return 'erro'
-    }
-}

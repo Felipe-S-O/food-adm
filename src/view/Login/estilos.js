@@ -25,7 +25,8 @@ export const estilos = (tema) => {
     atendenteImg: {
       width: "80%",
       height: 400,
-      marginBottom: 20,
+      marginLeft: "24%",
+      marginBottom: 22,
       alignItems: "center",
       justifyContent: "center",
     },

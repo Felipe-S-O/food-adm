@@ -1,37 +1,40 @@
 import React, { useContext, useEffect, useState } from "react"
 import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native"
 import { EmpresaContext } from "../../contexts/EmpresaContext";
+import { CEP, CPFouCNPJ, CampoTexto2, Celular, Email, Nome } from "../CampoTexto";
+import { ControlledInput } from "../ControlledInput";
 
 
-export default function ClienteModal({ }) {
+export default function ClienteModal({ itemSelecionado, setItemSelecionado, codigo, setLottieOK }) {
 
 
   const { idEmpresa } = useContext(EmpresaContext)
-  const [cliente, setCliente] = useState('')
-  const [horarioAtual, setHorarioAtual] = useState('')
-  const [minutos, setMinutos] = useState('')
-  const [idHorario, setIdHorario] = useState('')
+  const [cliente, setCliente] = useState({ codigo: codigo })
+  const [status, setStatus] = useState('')
+  const [CNPJ, setCNPJ] = useState('')
+  const [email, setEmail] = useState('')
+  const [telefone, setTelefone] = useState('')
   const [descricao, setDescricao] = useState('')
   const [modalVisivel, setModalVisivel] = useState(false)
   const [modalSelecionaHorario, setModalSelecionaHorario] = useState(false)
   const [tarefaParaAtualizar, setTarefaParaAtualizar] = useState(false)
-  const [lottieOK, setLottieOK] = useState(0)
+  //const [lottieOK, setLottieOK] = useState(0)
   const [statusError, setStatusError] = useState('');
+  const [mensagemError, setMensagemError] = useState(null);
 
+
+  useEffect(() => {
+    console.log(cliente)
+  }, [cliente])
 
   function limpaModal() {
     setCliente('')
-    setDescricao('')
-    setStatusError('')
-    setMinutos('')
-    setHorarioAtual('')
     setModalVisivel(false)
-    setTarefaParaAtualizar(false)
   }
 
   function tempo() {
     const intervalo = setInterval(() => {
-      setLottieOK(0)
+      //setLottieOK(0)
       clearInterval(intervalo);
     }, 2000)
   }
@@ -46,58 +49,27 @@ export default function ClienteModal({ }) {
         onRequestClose={() => { setModalVisivel(false) }}
       >
         <View style={estilos.centralizaModal}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={estilos.modal}>
-              <Text style={estilos.modalTitulo}>Criar Cliente</Text>
+          <View style={estilos.modal}>
+            <Text style={estilos.modalTitulo}>Criar Cliente</Text>
 
-              <Text style={estilos.modalSubTitulo}>Codigo*</Text>
-              <TextInput
-                style={estilos.modalInput}
-                onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="codigo do cliente"
-                value={cliente} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
+            <ScrollView style={estilos.area} showsVerticalScrollIndicator={true}>
+              <ControlledInput cliente={cliente} setCliente={setCliente} status={status} setStatus={setStatus} />
+            </ScrollView>
 
-              <Text style={estilos.modalSubTitulo}>Nome do cliente*</Text>
-              <TextInput
-                style={estilos.modalInput}
-                onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="Digite o nome do cliente"
-                value={cliente} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <Text style={estilos.modalSubTitulo}>Contato*</Text>
-              <TextInput
-                style={estilos.modalInput}
-                onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="Digite o contato"
-                value={cliente} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <Text style={estilos.modalSubTitulo}>Endereço</Text>
-              <TextInput
-                style={estilos.modalInput}
-                multiline={true}
-                onChangeText={novoDescricao => setDescricao(novoDescricao)}
-                placeholder="Digite o endereço "
-                value={descricao} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <View style={estilos.modalBotoes}>
-                <TouchableOpacity style={estilos.modalBotaoSalvar} onPress={() => { salvar() }}>
-                  <Text style={estilos.modalBotaoTexto}>Salvar</Text>
-                </TouchableOpacity>
-                {tarefaParaAtualizar ?
-                  <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => { excluir() }}>
-                    <Text style={estilos.modalBotaoTexto}>Excluir</Text>
-                  </TouchableOpacity> : <></>
-                }
-                <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => { limpaModal() }}>
-                  <Text style={estilos.modalBotaoTexto}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
+            <View style={estilos.modalBotoes}>
+              <TouchableOpacity style={estilos.modalBotaoSalvar} onPress={() => { setStatus('buscadados') }}>
+                <Text style={estilos.modalBotaoTexto}>Salvar</Text>
+              </TouchableOpacity>
+              {tarefaParaAtualizar ?
+                <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => { excluir() }}>
+                  <Text style={estilos.modalBotaoTexto}>Excluir</Text>
+                </TouchableOpacity> : <></>
+              }
+              <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => { limpaModal() }}>
+                <Text style={estilos.modalBotaoTexto}>Cancelar</Text>
+              </TouchableOpacity>
             </View>
-          </ScrollView>
+          </View>
         </View>
       </Modal>
       <TouchableOpacity onPress={() => { setModalVisivel(true) }} style={estilos.adicionarMemo}>
@@ -112,6 +84,11 @@ const estilos = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "flex-end"
+  },
+  area: {
+    width: 330,
+    maxHeight: 560,
+    marginBottom: 20,
   },
   modal: {
     backgroundColor: "#FFFFFF",

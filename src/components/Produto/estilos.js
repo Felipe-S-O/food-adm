@@ -1,73 +1,63 @@
-import { StyleSheet } from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
+const { width, height } = Dimensions.get('window')
 
-export const estilos = new StyleSheet.create({
-  cartao: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    minWidth: 250,
-    marginHorizontal: 16,
-    marginVertical: 8,
-    padding: 16,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
+export const estilos = (tema) => {
+
+  return StyleSheet.create({
+    subTitulo: {
+      fontWeight: "600",
+      marginBottom: 4,
+      marginTop: -8
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  imagem: {
-    width: 48,
-    height: 48,
-    borderRadius: 32,
-  },
-  textoContainer: {
-    flex: 1,
-    marginHorizontal: 16,
-    justifyContent: "space-between",
-  },
-  texto: {
-    fontSize: 18,
-    fontWeight: "700",
-    marginBottom: 8,
-    maxWidth: 200,
-  },
-  preco: {
-    color: "#5E9B71",
-  },
-  botaoArea: {
-    flexDirection: "row",
-  },
-  botaoRemover: {
-    backgroundColor: "#A93A3A",
-    width: 30,
-    height: 30,
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  botaoAdicionar: {
-    backgroundColor: "#5E9B71",
-    width: 30,
-    height: 30,
-    borderRadius: 5,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  botaoTexto: {
-    color: "#FFFFFF",
-    fontSize: 20,
-    fontWeight: "700",
-    lineHeight: 20,
-  },
-  quantidade: {
-    width: 40,
-    margin: 4,
-    alignItems: "center",
-    justifyContent: "center",
-  }
-})
+    checkbox: {
+      width: '100%',
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+      padding: 14,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: tema.cor1,
+    },
+    mensagemError: {
+      fontSize: 12,
+      color: '#ff0000',
+      fontWeight: "600"
+    },
+    precoArea: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: -10,
+      marginTop: 5
+    },
+    area: {
+      width: '32%',
+      marginEnd:20,
+      marginBottom: 4
+    },
+    modalInput: {
+      fontSize: 18,
+      paddingHorizontal: 4,
+      borderBottomWidth: 1,
+      borderBottomColor: '#15AABF',
+      marginBottom: 6
+    },
+    dropDownPicker: {
+      width: '100%',
+      justifyContent: 'center',
+      borderColor: tema.cor1,
+    },
+    checkboxTaxa: {
+      flexDirection: "row",
+      justifyContent: "flex-end",
+      paddingEnd: 10,
+    },
+    modalBotoes: {
+      flexDirection: "row",
+      justifyContent: "space-between"
+    },
+    botaoCamera:{
+      marginBottom: 34,
+    }
+  })
+}
