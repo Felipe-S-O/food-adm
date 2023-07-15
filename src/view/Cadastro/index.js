@@ -10,7 +10,8 @@ export default () => {
 
     const { temaEscolhido } = useContext(TemaContext);
     const estilo = estilos(temaEscolhido)
-    const botoes = ['produtos', 'categorias', 'combos', 'formasDePagamentos', 'clientes', 'fornecedores']
+    const botoes = ['produtos', 'categorias', 'combos', 'formasDePagamentos',
+        'clientes', 'fornecedores']
 
     return (
         <View style={estilo.container}>

@@ -15,9 +15,19 @@ export const estilos = (tema) => {
     },
     botaoTexto: {
       color: "#000",
-      fontSize: 20,
+      fontSize: 14,
       fontWeight: "700",
       lineHeight: 20,
+    },
+    botaoIcon: {
+      color: tema.cor1,
+      fontSize: 38,
+      marginBottom: 4
+    },
+    araeInterna: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: 14
     }
   })
 }

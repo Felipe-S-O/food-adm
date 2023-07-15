@@ -2,9 +2,10 @@ import { Text, View, TextInput, StyleSheet, TouchableOpacity } from "react-nativ
 import { FontAwesome } from '@expo/vector-icons'
 import { TextInputMask } from 'react-native-masked-text';
 import CheckboxPesonalisado from "../CheckboxPesonalisado";
-import { useState } from "react";
+import { ActivityIndicator } from "react-native-paper";
+import { TemaContext } from "../../contexts/TemaContext";
+import { useContext, useState } from "react";
 import axios from "axios";
-
 
 
 
@@ -102,7 +103,7 @@ export function Codigo({ value }) {
 
 export function Celular({ onChange, value }) {
     return <>
-        <Text style={estilos.subTitulo}>Celular*</Text>
+        <Text style={estilos.subTitulo}>Celular *</Text>
         <TextInputMask
             style={estilos.input}
             type={'cel-phone'}
@@ -119,16 +120,32 @@ export function Celular({ onChange, value }) {
 }
 
 export function CPFouCNPJ({ onChange, value }) {
+    const [alteracaoConfirmada, setAlteracaoConfirmada] = useState(false)
+    const [altera, setAltera] = useState(false)
+
+    function removerCaracteresInválidos(valor) {
+        // Remove caracteres inválidos do valor
+        let onge = valor.replace(/[^0-9]/g, '');
+        if (onge.length = 11 && !alteracaoConfirmada && !altera) {
+            setAltera(true)
+        } else if (onge.length = 11 && altera && !alteracaoConfirmada) {
+            setAlteracaoConfirmada(true)
+        } else if (onge.length <= 11 && altera & alteracaoConfirmada) {
+            setAltera(false)
+            setAlteracaoConfirmada(false)
+        }
+        onChange(onge)
+    }
 
     return <>
         <Text style={estilos.subTitulo}>CPF ou CNPJ</Text>
         <TextInputMask
             style={estilos.input}
-            type={value?.length > 13 ? 'cnpj' : 'cpf'}
+            type={alteracaoConfirmada ? 'cnpj' : 'cpf'}
             maxLength={18}
             value={value}
             placeholder="Digite o CPF ou CNPJ"
-            onChangeText={onChange}
+            onChangeText={(valor) => removerCaracteresInválidos(valor)}
         />
     </>
 }
@@ -156,6 +173,7 @@ export function Quantidade({ subTitulo, mensagemError, setValue, value, descrica
         <Text style={estilos.mensagemError}>{mensagemError}</Text>
     </>
 }
+
 export function Dinheiro({ subTitulo, mensagemError, setValue, value, descricao, tamanhoMedio }) {
     return <>
         <Text style={estilos.subTitulo}>{subTitulo}</Text>
@@ -173,24 +191,36 @@ export function Dinheiro({ subTitulo, mensagemError, setValue, value, descricao,
             }}
             value={value}
         />
-        <Text style={estilos.mensagemError}>{mensagemError}</Text>
+        {mensagemError && <Text style={estilos.mensagemError}>{mensagemError}</Text>}
     </>
 }
+
 export function CEP({ onChange, value, setValue }) {
 
+    const [isLoading, setIsLoading] = useState(false)
+
     async function buscaCep() {
-        await axios.get(`https://viacep.com.br/ws/${value?.replace('-', '')}/json/`)
-            .then((response) => {
-                setValue('endereco', response.data.logradouro)
-                setValue('bairro', response.data.bairro)
-                console.log('🚀 Consulta Finalizada com Sucesso! 🙅😁')
-                console.log(response.data)
-            })
-            .catch((error) => {
-                console.log('🚀 Erro ao Consultar Api! 😩😭')
-                console.error(error)
-            })
+        if (value?.length == 9) {
+            carrega()
+            await axios.get(`https://viacep.com.br/ws/${value?.replace('-', '')}/json/`)
+                .then((response) => {
+                    setValue('endereco', response.data.logradouro)
+                    setValue('bairro', response.data.bairro)
+                    console.log(response.data)
+                })
+                .catch((error) => {
+                    console.error(error)
+                })
+        }
         // setVisivel('tabela')
+    }
+
+    function carrega() {
+        setIsLoading(true)
+        const intervalo = setInterval(() => {
+            setIsLoading(false)
+            clearInterval(intervalo);
+        }, 1500)
     }
 
     return <>
@@ -207,8 +237,44 @@ export function CEP({ onChange, value, setValue }) {
 
             </View>
             <TouchableOpacity onPress={buscaCep}>
-                <FontAwesome name="search" size={30} color='#FAB005' />
+                {isLoading ?
+                    <ActivityIndicator color="#000" />
+                    :
+                    <FontAwesome name="search" size={30} color='#FAB005' />
+                }
             </TouchableOpacity>
+        </View>
+    </>
+}
+
+export function Min({ onChange, value }) {
+
+    return <>
+        <View style={estilos.areaQuantidadePermitida}>
+            <Text style={estilos.subTitulQuantidade}>Mín</Text>
+            <TextInput
+                style={estilos.inputQuantidade}
+                onChangeText={onChange}
+                placeholder="00"
+                value={value}
+                keyboardType='numeric'
+            />
+        </View>
+    </>
+}
+
+export function Max({ onChange, value }) {
+
+    return <>
+        <View style={estilos.areaQuantidadePermitida}>
+            <Text style={estilos.subTitulQuantidade}>Max</Text>
+            <TextInput
+                style={estilos.inputQuantidade}
+                onChangeText={onChange}
+                placeholder="00"
+                value={value}
+                keyboardType='numeric'
+            />
         </View>
     </>
 }
@@ -229,12 +295,29 @@ const estilos = StyleSheet.create({
     mensagemError: {
         fontSize: 12,
         color: '#ff0000',
-        marginBottom: 4,
         fontWeight: "600"
     },
     area: {
         flexDirection: "row",
         justifyContent: "space-between",
     },
-
+    inputQuantidade: {
+        fontSize: 18,
+        paddingHorizontal: 4,
+        borderBottomWidth: 1,
+        borderBottomColor: '#15AABF',
+        marginLeft: 30
+    },
+    subTitulQuantidade: {
+        color: '#15AABF',
+        fontSize: 22,
+        fontWeight: "600",
+        marginEnd: -20,
+    },
+    areaQuantidadePermitida: {
+        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: "space-between",
+        marginBottom: 10,
+    },
 });

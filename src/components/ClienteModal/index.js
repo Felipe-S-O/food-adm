@@ -1,44 +1,78 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native"
+import { Modal, View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native"
 import { EmpresaContext } from "../../contexts/EmpresaContext";
-import { CEP, CPFouCNPJ, CampoTexto2, Celular, Email, Nome } from "../CampoTexto";
 import { ControlledInput } from "../ControlledInput";
-
+import { atualizar, salvarItem } from "../../server/firestore";
+import Button from "../Button";
+import validaCpfCnpj from "../CampoTexto/validaCpfCnpj";
 
 export default function ClienteModal({ itemSelecionado, setItemSelecionado, codigo, setLottieOK }) {
 
+  useEffect(() => {
+    if (itemSelecionado.id) {
+      setModalVisivel(true)
+      setStatus('atualizar')
+      setClienteAtualizar(true)
+    }
+  }, [itemSelecionado])
 
   const { idEmpresa } = useContext(EmpresaContext)
-  const [cliente, setCliente] = useState({ codigo: codigo })
+  const [cadastro, setCadastro] = useState({})
+  const [loading, setIsLoading] = useState(false)
   const [status, setStatus] = useState('')
-  const [CNPJ, setCNPJ] = useState('')
-  const [email, setEmail] = useState('')
-  const [telefone, setTelefone] = useState('')
-  const [descricao, setDescricao] = useState('')
   const [modalVisivel, setModalVisivel] = useState(false)
-  const [modalSelecionaHorario, setModalSelecionaHorario] = useState(false)
-  const [tarefaParaAtualizar, setTarefaParaAtualizar] = useState(false)
-  //const [lottieOK, setLottieOK] = useState(0)
-  const [statusError, setStatusError] = useState('');
-  const [mensagemError, setMensagemError] = useState(null);
-
+  const [clienteAtualizar, setClienteAtualizar] = useState(false)
 
   useEffect(() => {
-    console.log(cliente)
-  }, [cliente])
+    if (cadastro.nome) {
+      if (validaCpfCnpj(cadastro.identifica)) {
+        carrega()
+      } else {
+        setStatus('identifica')
+      }
+    }
+  }, [cadastro])
 
   function limpaModal() {
-    setCliente('')
     setModalVisivel(false)
+    setStatus('')
+    setCadastro({})
+    setItemSelecionado({})
+    setClienteAtualizar(false)
   }
 
-  function tempo() {
+  function carrega() {
+    setIsLoading(true)
+    salvar()
     const intervalo = setInterval(() => {
-      //setLottieOK(0)
+      setIsLoading(false)
       clearInterval(intervalo);
     }, 2000)
   }
 
+  function alteraStatus() {
+    setStatus('buscadados')
+  }
+
+  async function salvar() {
+    let resultado
+    if (clienteAtualizar) {
+      resultado = await atualizar(itemSelecionado.id, {
+        ...cadastro
+      }, 'clientes')
+    } else {
+      resultado = await salvarItem({
+        ...cadastro
+      }, 'clientes')
+    }
+    setLottieOK(1)
+    limpaModal()
+
+    if (resultado === 'Error') {
+      setStatusError('firebase')
+      setMensagemError('Erro ao tentar salvar tarefa!');
+    }
+  }
 
   return (
     <>
@@ -53,21 +87,12 @@ export default function ClienteModal({ itemSelecionado, setItemSelecionado, codi
             <Text style={estilos.modalTitulo}>Criar Cliente</Text>
 
             <ScrollView style={estilos.area} showsVerticalScrollIndicator={true}>
-              <ControlledInput cliente={cliente} setCliente={setCliente} status={status} setStatus={setStatus} />
+              <ControlledInput itemSelecionado={itemSelecionado} setCadastro={setCadastro} status={status} setStatus={setStatus} codigo={codigo} idEmpresa={idEmpresa} />
             </ScrollView>
 
             <View style={estilos.modalBotoes}>
-              <TouchableOpacity style={estilos.modalBotaoSalvar} onPress={() => { setStatus('buscadados') }}>
-                <Text style={estilos.modalBotaoTexto}>Salvar</Text>
-              </TouchableOpacity>
-              {tarefaParaAtualizar ?
-                <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => { excluir() }}>
-                  <Text style={estilos.modalBotaoTexto}>Excluir</Text>
-                </TouchableOpacity> : <></>
-              }
-              <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => { limpaModal() }}>
-                <Text style={estilos.modalBotaoTexto}>Cancelar</Text>
-              </TouchableOpacity>
+              <Button title='Salvar' isLoading={loading} onPress={alteraStatus} />
+              <Button title='Cancelar' onPress={limpaModal} />
             </View>
           </View>
         </View>

@@ -11,7 +11,7 @@ export const estilos = (tema) => {
       alignItems: "center",
       justifyContent: "space-between",
       marginHorizontal: 10,
-      marginBottom: 8,
+      marginBottom: 7,
     },
     botao: {
       width: (width - 12) / 6.4,

@@ -4,19 +4,17 @@ const { width, height } = Dimensions.get('window')
 export const estilos = (tema) => {
 
     return StyleSheet.create({
-
         centralizaModal: {
             flex: 1,
-            width: "100%",
             flexDirection: "row",
-            justifyContent: 'center',
-            alignItems: "flex-end",
+            alignItems: "flex-end"
         },
         modal: {
             backgroundColor: "#FFFFFF",
             paddingHorizontal: 16,
             paddingTop: 16,
-            //marginTop: 8,
+            paddingBottom: 32,
+            marginTop: 8,
             marginHorizontal: 16,
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
@@ -29,92 +27,15 @@ export const estilos = (tema) => {
             shadowRadius: 6.27,
             elevation: 10,
         },
-        dropDownPicker: {
-            width: (width - 12) / 1.2,
-            borderColor: tema.cor1,
-        },
-        dropDownPickerMenor: {
-            width: (width - 12) / 1.6,
-            borderColor: tema.cor1,
-        },
-        quantidadePermitida: {
-            flexDirection: "row",
-            alignItems: 'center',
-            justifyContent: "space-around",
-            marginBottom: 10,
-           // marginTop: -8,
-        },
-        inputQuantidade: {
-            fontSize: 18,
-            paddingHorizontal: 4,
-            borderBottomWidth: 1,
-            borderBottomColor: '#15AABF',
-        },
-        subTitulQuantidade: {
-            color: '#15AABF',
-            fontSize: 22,
-            fontWeight: "600",
-            marginEnd: -20,
-        },
-        picker: {
-            backgroundColor: "#FFFFFF",
-            shadowColor: "#000",
-            shadowOffset: {
-                width: 0,
-                height: 2,
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
-            elevation: 5,
-        },
-        textoPicker: {
-            color: tema.cor2,
-        },
-        adicionarProdutoArea: {
-            flexDirection: "row",
-            marginBottom: 14,
-            marginTop: -10,
-            alignItems: "center",
-            justifyContent: "space-between",
-        },
-        botaoIncluir: {
-            width: 70,
-            height: 46,
-            borderRadius: 5,
-            marginBottom: -20,
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: tema.cor2,
-        },
-        texto: {
-            color: '#000',
-            fontSize: 16,
-            fontWeight: "700",
-        },
-        areaListaDeProduto: {
-            maxHeight: 130,
-            minHeight: 130,
-            marginBottom: 16,
-            borderRadius: 10,
-            borderWidth: 1,
-            borderColor: tema.cor1,
-        },
-        menuBotao: {
-            width: 40,
-            borderRadius: 5,
-            backgroundColor: tema.cor2,
-            alignItems: "center",
-            justifyContent: 'center',
-        },
         modalTitulo: {
             color: '#15AABF',
             fontSize: 28,
             fontWeight: "600",
             marginBottom: 18,
         },
-
         modalInput: {
             fontSize: 18,
+            marginBottom: 12,
             paddingHorizontal: 4,
             borderBottomWidth: 1,
             borderBottomColor: '#15AABF',
@@ -156,7 +77,6 @@ export const estilos = (tema) => {
         },
         modalBotoes: {
             flexDirection: "row",
-            marginBottom: 8,
             justifyContent: "space-between"
         },
         modalBotaoSalvar: {
@@ -213,6 +133,27 @@ export const estilos = (tema) => {
             alignItems: 'center',
             justifyContent: 'center',
             position: "absolute",
+        },
+        checkbox: {
+            width: '100%',
+            flexDirection: "row",
+            justifyContent: "space-around",
+            padding: 14,
+            borderRadius: 10,
+            borderWidth: 1,
+            borderColor: tema.cor1,
+            marginBottom: 10,
+        },
+        filtro: {
+            color: tema.cor2,
+            fontSize: 40,
+            marginEnd: '-80%',
+            marginTop: -70,
+            marginBottom: -50
+        },
+        filtroIcon: {
+            color: tema.cor2,
+            fontSize: 40,
         }
     })
 }

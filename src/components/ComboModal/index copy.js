@@ -9,7 +9,6 @@ import { ListaComposicao } from "../ListaComposicao";
 import { MenuCombo } from "../MenuCombo";
 import { Venda } from "../Venda";
 import { Dinheiro, Texto } from "../CampoTexto";
-import { FormeCombo } from "../FormeCombo";
 
 export default function ComboModal({ }) {
 
@@ -88,7 +87,80 @@ export default function ComboModal({ }) {
                             descricao="R$0,00"
                         />
                         <MenuCombo passo={passo} setPasso={setPasso} />
-                        <FormeCombo />
+                        <Texto
+                            subTitulo='Defina um título oo passo:*'
+                            value={combo}
+                            descricao="Digite nome do combo"
+                            onChange={setCombo}
+                        />
+
+                        <View style={estilo.quantidadePermitida}>
+                            <Text style={estilo.subTitulQuantidade}>Mín</Text>
+                            <TextInput
+                                style={estilo.inputQuantidade}
+                                onChangeText={novoCliente => setCombo(novoCliente)}
+                                placeholder="00"
+                                value={combo}
+                                keyboardType='numeric'
+                            />
+                            <Text style={estilo.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
+
+                            <Text style={estilo.subTitulQuantidade}>Máx</Text>
+                            <TextInput
+                                style={estilo.inputQuantidade}
+                                multiline={true}
+                                onChangeText={novoDescricao => setDescricao(novoDescricao)}
+                                placeholder="00"
+                                value={descricao}
+                                keyboardType='numeric'
+                            />
+                            <Text style={estilo.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
+                        </View>
+
+
+                        <Text style={estilo.modalSubTitulo}>Método de cálculo:</Text>
+                        <DropDownPicker
+                            style={estilo.dropDownPicker}
+                            open={open2}
+                            value={value}
+                            items={items}
+                            searchable={true}
+                            dropDownDirection="TOP"
+                            language="PT"
+                            setOpen={setOpen2}
+                            setValue={setValue}
+                            setItems={setItems}
+                        />
+                        <Text style={estilo.mensagemError}>{statusError == 'tipoMedida' ? mensagemError : ''}</Text>
+
+                        <View style={estilo.adicionarProdutoArea}>
+                            <View>
+                                <Text style={estilo.modalSubTitulo}>Selecione o produto desejado:</Text>
+                                <DropDownPicker
+                                    style={estilo.dropDownPickerMenor}
+                                    open={open}
+                                    value={value}
+                                    items={items2}
+                                    searchable={true}
+                                    dropDownDirection="TOP"
+                                    language="PT"
+                                    setOpen={setOpen}
+                                    setValue={setValue}
+                                    setItems={setItems2}
+                                />
+                            </View>
+                            <TouchableOpacity style={estilo.botaoIncluir} onPress={() => { limpaModal() }}>
+                                <Text style={estilo.texto}>incluir</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={estilo.areaListaDeProduto}>
+                            <FlatList
+                                data={vendas}
+                                keyExtractor={item => Math.random()}
+                                renderItem={({ item }) => <Venda item={item} />}
+                                showsVerticalScrollIndicator={false}
+                            />
+                        </View>
                         <View style={estilo.modalBotoes}>
                             <TouchableOpacity style={estilo.modalBotaoSalvar} onPress={() => { salvar() }}>
                                 <Text style={estilo.modalBotaoTexto}>Salvar</Text>

@@ -1,20 +1,50 @@
-import { View, Text, Alert, Image, } from 'react-native'
-import { PedidoContext } from "../../contexts/PedidoContext";
+import { View, Text, TouchableOpacity, StatusBar, ScrollView, FlatList } from 'react-native'
 import { TemaContext } from "../../contexts/TemaContext";
-import { useNavigation } from "@react-navigation/native";
 import React, { useContext, useState } from "react";
 import itens from './cards';
 import { estilos } from './estilos'
-import { Value } from 'react-native-reanimated';
 import { Carrossel } from '../../components/Carrossel';
-import { VictoryChart, VictoryLine, VictoryPie } from 'victory-native';
-import { StatusBar } from 'react-native';
+import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'
 import Topo from '../../components/Topo';
+import { BotaoCadastro } from '../../components/BotaoCadastro';
+import Grafico from '../../components/Grafico';
+import ProdutoModal from '../../components/ProdutoModal';
+import Filtro from '../../components/Filtro';
 
 export default function Dashboaed() {
 
+    const [viewMode, setViewMode] = useState('chart')
+    const botoes = ['produtos', 'categorias', 'combos', 'formasDePagamentos',
+        'clientes', 'fornecedores']
+
     const { temaEscolhido } = useContext(TemaContext);
     const estilo = estilos(temaEscolhido)
+
+    function menuDeSecao() {
+        return (
+            <View style={estilo.containerMenu} >
+                <View>
+                    <Text style={estilo.tituloMenu}>{viewMode == 'chart' ? 'Categorias' : 'Relatorios'}</Text>
+                </View>
+
+                <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity
+                        style={[estilo.botaoMenu, { backgroundColor: viewMode == 'chart' ? "#FAB005" : null }]}
+                        onPress={() => setViewMode('chart')}
+                    >
+                        <AntDesign style={estilo.iconMenu} name="piechart" />
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={[estilo.botaoMenu, { backgroundColor: viewMode == 'list' ? "#FAB005" : null }]}
+                        onPress={() => setViewMode('list')}
+                    >
+                        <MaterialCommunityIcons style={estilo.iconMenu} name="view-grid" />
+                    </TouchableOpacity>
+                </View>
+            </View >
+        )
+    }
+
 
 
     return <>
@@ -22,25 +52,26 @@ export default function Dashboaed() {
             <StatusBar barStyle='dark-content' backgroundColor='#139fb2' />
             <Topo texto='Dashboaed' />
             <View style={estilo.carrosselArea}>
-                <Text style={estilo.textoCarrossel}>Vendas</Text>
-                <Text style={estilo.valorCarrossel}>R$: 14.485,52</Text>
-                <Text style={estilo.tituloCarrossel}>Dashboaed</Text>
+                <Filtro />
+                <Text style={estilo.textoCarrossel}>Total de Vendas</Text>
+                <Text style={estilo.valorCarrossel}>R$:14.485,52</Text>
             </View >
             <Carrossel data={itens} />
 
-            <View>
-                <VictoryChart>
-                    <VictoryLine
-                        data={[
-                            { x: 1, y: 2 },
-                            { x: 2, y: 3 },
-                            { x: 3, y: 5 },
-                            { x: 4, y: 4 },
-                            { x: 5, y: 6 }
-                        ]}
-                    />
-                </VictoryChart>
-            </View>
+            {menuDeSecao()}
+            {viewMode == 'list' ?
+                <FlatList
+                    style={{ marginBottom: 64 }}
+                    numColumns={2}
+                    data={botoes}
+                    keyExtractor={item => Math.random(item)}
+                    renderItem={({ item }) => <BotaoCadastro item={item} />}
+                    showsVerticalScrollIndicator={false}
+                />
+
+                :
+                <Grafico />
+            }
         </View>
 
     </>

@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, FlatList, Image } from 'react-native';
+import { View, FlatList, Text } from 'react-native';
 import estilo from './estilos';
+import { ListaCarrosel } from "../ListaCarrosel";
 
-export function Carrossel({ data, tempoAnimacao = 1000 }){
-  const [ indice, setIndice ] = useState(0);
+export function Carrossel({ data, tempoAnimacao = 1000 }) {
+  const [indice, setIndice] = useState(0);
   const carrosselRef = useRef();
 
-  function alteraPosicaoObjeto(){
-    if(indice < data.length - 1){
+  function alteraPosicaoObjeto() {
+    if (indice < data.length - 1) {
       setIndice(indice + 1);
     }
     else {
@@ -32,15 +33,7 @@ export function Carrossel({ data, tempoAnimacao = 1000 }){
         horizontal
         showsHorizontalScrollIndicator={false}
         keyExtractor={item => item.id}
-        renderItem={({ item, index }) => (
-          <Image
-            source={item.imagem}
-            style={[estilo.image, 
-              index == data.length-1 ? { marginRight: 200 } : null
-            ]}
-            resizeMode="contain"
-          />
-        )}
+        renderItem={({ item}) => <ListaCarrosel item={item} />}
         ref={carrosselRef}
       />
     </View>

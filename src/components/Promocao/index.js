@@ -2,7 +2,7 @@ import CheckboxPesonalisado from '../CheckboxPesonalisado';
 import { TemaContext } from "../../contexts/TemaContext";
 import { useContext, useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
-import CampoTexto from '../CampoTexto';
+import { CampoTexto } from "../CampoTexto";
 import { estilos } from './estilos'
 import DateTime from '../DateTime';
 

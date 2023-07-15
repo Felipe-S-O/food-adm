@@ -6,13 +6,12 @@ export const estilos = (tema) => {
   return StyleSheet.create({
 
     botao: {
-      width: (width - 12) / 1.1,
-      flexDirection: "row",
+      width: (width - 12) / 2.4,
+      height: (height - 12) / 7.2,
       alignItems: "center",
-      justifyContent: "space-between",
+      justifyContent: "center",
       marginHorizontal: 16,
       marginVertical: 8,
-      padding: 5,
       backgroundColor: "#FFFFFF",
       borderRadius: 10,
       shadowColor: "#000",
@@ -24,15 +23,6 @@ export const estilos = (tema) => {
       shadowRadius: 3.84,
       elevation: 5,
     },
-    titulo: {
-      marginHorizontal: 16,
-    },
-    textoContainer: {
-      width: (width - 12) / 1.4,
-      alignItems: "center",
-      flexDirection: "row",
-      justifyContent: "space-between",
-    },
     texto: {
       fontSize: 18,
       fontWeight: "700",
@@ -41,20 +31,11 @@ export const estilos = (tema) => {
     texto1: {
       color: tema.cor2,
       fontWeight: "700",
-      marginBottom: 4
     },
     texto2: {
       color: tema.cor1,
       fontWeight: "700",
-      marginBottom: 4
     },
-    seta: {
-      fontSize: 18,
-      fontWeight: "700",
-      color: tema.cor2,
-    },
-    iconTextoArea: {
-      flexDirection: "row",
-    }
+
   })
 }

@@ -4,7 +4,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import CheckboxPesonalisado from "../CheckboxPesonalisado";
 import { estilos } from './estilos'
 import { TemaContext } from "../../contexts/TemaContext";
-import CampoTexto from "../CampoTexto";
+import { CampoTexto } from "../CampoTexto";
 import { atualizar, salvarItem } from "../../server/firestore";
 import { EmpresaContext } from "../../contexts/EmpresaContext";
 import { MaterialCommunityIcons } from '@expo/vector-icons'
@@ -253,7 +253,7 @@ export function Produto({ codigo, alterarMenu, listaCategoria, setListaCategoria
       </View >
 
       <Text style={estilo.subTitulo}>Disponível</Text>
-      <View style={[estilo.checkbox, { marginBottom: 28 }]}>
+      <View style={[estilo.checkbox, { marginBottom: 24 }]}>
         <CheckboxPesonalisado texto="Seg" cor="#FAB005" botaoAtivo={true} value={seg} setValue={setSeg} />
         <CheckboxPesonalisado texto="Ter" cor="#FAB005" botaoAtivo={true} value={ter} setValue={setTer} />
         <CheckboxPesonalisado texto="Qua" cor="#FAB005" botaoAtivo={true} value={qua} setValue={setQua} />

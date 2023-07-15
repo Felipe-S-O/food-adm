@@ -1,41 +1,77 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native"
+import { Modal, View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native"
 import { EmpresaContext } from "../../contexts/EmpresaContext";
+import { ControlledInput } from "../ControlledInput";
+import { atualizar, salvarItem } from "../../server/firestore";
+import Button from "../Button";
+import validaCpfCnpj from "../CampoTexto/validaCpfCnpj";
 
-
-export default function FornecedorModal({ }) {
-
+export default function FornecedorModal({ itemSelecionado, setItemSelecionado, codigo, setLottieOK }) {
+  useEffect(() => {
+    if (itemSelecionado.id) {
+      setModalVisivel(true)
+      setStatus('atualizar')
+      setFornecedorAtualizar(true)
+    }
+  }, [itemSelecionado])
 
   const { idEmpresa } = useContext(EmpresaContext)
-  const [cliente, setCliente] = useState('')
-  const [horarioAtual, setHorarioAtual] = useState('')
-  const [minutos, setMinutos] = useState('')
-  const [idHorario, setIdHorario] = useState('')
-  const [descricao, setDescricao] = useState('')
+  const [cadastro, setCadastro] = useState({})
+  const [loading, setIsLoading] = useState(false)
+  const [status, setStatus] = useState('')
   const [modalVisivel, setModalVisivel] = useState(false)
-  const [modalSelecionaHorario, setModalSelecionaHorario] = useState(false)
-  const [tarefaParaAtualizar, setTarefaParaAtualizar] = useState(false)
-  const [lottieOK, setLottieOK] = useState(0)
-  const [statusError, setStatusError] = useState('');
+  const [fornecedorAtualizar, setFornecedorAtualizar] = useState(false)
 
+  useEffect(() => {
+    if (cadastro.nome) {
+      if (validaCpfCnpj(cadastro.identifica)) {
+        carrega()
+      } else {
+        setStatus('identifica')
+      }
+    }
+  }, [cadastro])
 
   function limpaModal() {
-    setCliente('')
-    setDescricao('')
-    setStatusError('')
-    setMinutos('')
-    setHorarioAtual('')
     setModalVisivel(false)
-    setTarefaParaAtualizar(false)
+    setStatus('')
+    setCadastro({})
+    setItemSelecionado({})
+    setFornecedorAtualizar(false)
   }
 
-  function tempo() {
+  function carrega() {
+    setIsLoading(true)
+    salvar()
     const intervalo = setInterval(() => {
-      setLottieOK(0)
+      setIsLoading(false)
       clearInterval(intervalo);
     }, 2000)
   }
 
+  function alteraStatus() {
+    setStatus('buscadados')
+  }
+
+  async function salvar() {
+    let resultado
+    if (fornecedorAtualizar) {
+      resultado = await atualizar(itemSelecionado.id, {
+        ...cadastro
+      }, 'fornecedores')
+    } else {
+      resultado = await salvarItem({
+        ...cadastro
+      }, 'fornecedores')
+    }
+    setLottieOK(1)
+    limpaModal()
+
+    if (resultado === 'Error') {
+      setStatusError('firebase')
+      setMensagemError('Erro ao tentar salvar tarefa!');
+    }
+  }
 
   return (
     <>
@@ -46,58 +82,18 @@ export default function FornecedorModal({ }) {
         onRequestClose={() => { setModalVisivel(false) }}
       >
         <View style={estilos.centralizaModal}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={estilos.modal}>
-              <Text style={estilos.modalTitulo}>Criar fornecedor</Text>
+          <View style={estilos.modal}>
+            <Text style={estilos.modalTitulo}>Criar Fornecedor</Text>
 
-              <Text style={estilos.modalSubTitulo}>Código*</Text>
-              <TextInput
-                style={estilos.modalInput}
-                onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="código do fornecedor"
-                value={cliente} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
+            <ScrollView style={estilos.area} showsVerticalScrollIndicator={true}>
+              <ControlledInput itemSelecionado={itemSelecionado} setCadastro={setCadastro} status={status} setStatus={setStatus} codigo={codigo} idEmpresa={idEmpresa} />
+            </ScrollView>
 
-              <Text style={estilos.modalSubTitulo}>Nome do fornecedor*</Text>
-              <TextInput
-                style={estilos.modalInput}
-                onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="Digite o nome do fornecedor"
-                value={cliente} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <Text style={estilos.modalSubTitulo}>Contato do fornecedor*</Text>
-              <TextInput
-                style={estilos.modalInput}
-                onChangeText={novoCliente => setCliente(novoCliente)}
-                placeholder="Digite o conta do fornecedor"
-                value={cliente} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <Text style={estilos.modalSubTitulo}>Endereço</Text>
-              <TextInput
-                style={estilos.modalInput}
-                multiline={true}
-                onChangeText={novoDescricao => setDescricao(novoDescricao)}
-                placeholder="Digite o endereço"
-                value={descricao} />
-              <Text style={estilos.mensagemError}>{statusError == 'cliente' ? mensagemError : ''}</Text>
-
-              <View style={estilos.modalBotoes}>
-                <TouchableOpacity style={estilos.modalBotaoSalvar} onPress={() => { salvar() }}>
-                  <Text style={estilos.modalBotaoTexto}>Salvar</Text>
-                </TouchableOpacity>
-                {tarefaParaAtualizar ?
-                  <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => { excluir() }}>
-                    <Text style={estilos.modalBotaoTexto}>Excluir</Text>
-                  </TouchableOpacity> : <></>
-                }
-                <TouchableOpacity style={estilos.modalBotaoCancelar} onPress={() => { limpaModal() }}>
-                  <Text style={estilos.modalBotaoTexto}>Cancelar</Text>
-                </TouchableOpacity>
-              </View>
+            <View style={estilos.modalBotoes}>
+              <Button title='Salvar' isLoading={loading} onPress={alteraStatus} />
+              <Button title='Cancelar' onPress={limpaModal} />
             </View>
-          </ScrollView>
+          </View>
         </View>
       </Modal>
       <TouchableOpacity onPress={() => { setModalVisivel(true) }} style={estilos.adicionarMemo}>
@@ -112,6 +108,11 @@ const estilos = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     alignItems: "flex-end"
+  },
+  area: {
+    width: 330,
+    maxHeight: 560,
+    marginBottom: 20,
   },
   modal: {
     backgroundColor: "#FFFFFF",
@@ -239,3 +240,5 @@ const estilos = StyleSheet.create({
     position: "absolute",
   }
 });
+
+

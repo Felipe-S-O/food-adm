@@ -4,7 +4,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { TemaContext } from "../../contexts/TemaContext";
 import { useContext, useEffect, useState } from 'react';
 import { ListaComposicao } from '../ListaComposicao';
-import CampoTexto from '../CampoTexto';
+import { CampoTexto } from "../CampoTexto";
 import { estilos } from './estilos'
 
 export function Composicao({ codigo, idEmpresa, itemsComposicao, setItemsComposicao, setMenu, alterarMenu }) {

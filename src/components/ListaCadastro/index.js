@@ -5,6 +5,7 @@ import { EmpresaContext } from "../../contexts/EmpresaContext"
 import { useContext, useEffect, useState } from 'react';
 import CheckboxPesonalisado from '../CheckboxPesonalisado';
 import { buscalista } from '../../server/firestore';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 
 export function ListaCadastro({ item, tabela, setItemSelecionado }) {
 
@@ -58,12 +59,17 @@ export function ListaCadastro({ item, tabela, setItemSelecionado }) {
             </View>
           </View>
             : tabela == 'fornecedores' ? <View style={estilo.titulo} >
-              <Text style={estilo.texto} >{item.descricao}</Text>
-              <View style={estilo.textoContainer}>
-                <Text style={estilo.texto2}>COD: {item.codigo}</Text>
-                <CheckboxPesonalisado texto=" Ativa" cor="#FAB005" flexDirection='row' value={item.ativo} />
-                <CheckboxPesonalisado texto=" Visivel" cor="#FAB005" flexDirection='row' value={item.visivel} />
+              <Text style={estilo.texto} >{item.nome}</Text>
+              <View style={estilo.iconTextoArea}>
+                <MaterialCommunityIcons name="phone" size={18} color='#FAB005' />
+                <Text style={estilo.texto2}> {item.celular}</Text>
               </View>
+              {item.email ?
+                <View style={estilo.iconTextoArea}>
+                  <MaterialCommunityIcons name="email" size={18} color='#FAB005' />
+                  <Text style={estilo.texto2}> {item.email}</Text>
+                </View> : <></>
+              }
             </View>
               : tabela == 'formasDePagamentos' ? <View style={estilo.titulo} >
                 <Text style={estilo.texto} >{item.descricao}</Text>
@@ -73,9 +79,18 @@ export function ListaCadastro({ item, tabela, setItemSelecionado }) {
                   <CheckboxPesonalisado texto=" Ativa" cor="#FAB005" flexDirection='row' value={item.ativa} />
                 </View>
               </View>
-                : tabela == 'clientes' ? <View style={estilo.textoContainer}>
-                  <Text style={estilo.texto} >{item.numero}</Text>
-                  <Text style={estilo.preco}>R$ {item.preco}</Text>
+                : tabela == 'clientes' ? <View style={estilo.titulo}>
+                  <Text style={estilo.texto} >{item.nome}</Text>
+                  <View style={estilo.iconTextoArea}>
+                    <MaterialCommunityIcons name="phone" size={18} color='#FAB005' />
+                    <Text style={estilo.texto2}> {item.celular}</Text>
+                  </View>
+                  {item.email ?
+                    <View style={estilo.iconTextoArea}>
+                      <MaterialCommunityIcons name="email" size={18} color='#FAB005' />
+                      <Text style={estilo.texto2}> {item.email}</Text>
+                    </View> : <></>
+                  }
                 </View> : <></>
       }
       <Text style={estilo.seta}>❯</Text>

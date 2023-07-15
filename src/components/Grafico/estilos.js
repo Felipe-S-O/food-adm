@@ -31,7 +31,7 @@ export const estilos = (tema) => {
       width: (width - 12) / 1.4,
       alignItems: "center",
       flexDirection: "row",
-      justifyContent: "space-between",
+      justifyContent: "space-evenly",
     },
     texto: {
       fontSize: 18,
@@ -53,8 +53,24 @@ export const estilos = (tema) => {
       fontWeight: "700",
       color: tema.cor2,
     },
-    iconTextoArea: {
+    areasumario: {
+      width: (width - 12) / 1.1,
       flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginHorizontal: 20,
+      marginVertical: 8,
+      padding: 10,
+      backgroundColor: tema.fundoBotao,
+      borderRadius: 10,
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
     }
   })
 }

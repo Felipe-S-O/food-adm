@@ -1,46 +1,68 @@
 import { View, Text } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { CEP, CPFouCNPJ, Celular, Codigo, Texto } from "../CampoTexto";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { StyleSheet } from "react-native";
+import validaCpfCnpj from "../CampoTexto/validaCpfCnpj";
 
 const schema = yup.object({
     nome: yup.string().required('Informe o nome do cliente'),
     email: yup.string().email('Email invalido'),
     celular: yup.string().min(14, 'O celular deve ter pelo menos 11 digitos').required('Informa o celular'),
-    identifica: yup.string().min(14, 'O celular deve ter pelo menos 11 digitos'),
-    cep: yup.string().min(9, 'O celular deve ter pelo menos 11 digitos')
+    cep: yup.string().min(9, 'O cep deve ter pelo menos 9 digitos')
 })
 
-export function ControlledInput({ cliente, setCliente, status, setStatus }) {
-    const { control, handleSubmit, setValue, formState: { errors } } = useForm({
-        resolver: yupResolver(schema),
+export function ControlledInput({ itemSelecionado, setCadastro, status, setStatus, codigo, idEmpresa }) {
 
+    const [statusError, setStatusError] = useState()
+    const { control, handleSubmit, watch, setValue, formState: { errors } } = useForm({
+        resolver: yupResolver(schema),
+        defaultValues: {
+            bairro: '',
+            endereco: '',
+            complemento: '',
+            identifica: itemSelecionado.identifica,
+            numero: '',
+            idEmpresa: idEmpresa
+        }
     });
 
     useEffect(() => {
-        setValue('codigo', cliente.codigo)
-        setValue('nome', cliente.nome)
-        setValue('identifica', cliente.identifica)
-        setValue('celular', cliente.celular)
-        setValue('email', cliente.email)
-        setValue('cep', cliente.cep)
-        setValue('endereço', cliente.endereço)
-        setValue('numero', cliente.numero)
-        setValue('bairro', cliente.bairro)
-        setValue('complemento', cliente.complemento)
+        setValue('codigo', codigo)
     }, [])
 
     useEffect(() => {
         if (status == 'buscadados') {
-            onSubmit()
-            setStatus('')
+            validaIdentifica()
+        } else if (status == 'atualizar') {
+            setValue('nome', itemSelecionado.nome)
+            setValue('codigo', itemSelecionado.codigo)
+            setValue('identifica', itemSelecionado.identifica)
+            setValue('celular', itemSelecionado.celular)
+            setValue('email', itemSelecionado.email)
+            setValue('cep', itemSelecionado.cep)
+            setValue('endereco', itemSelecionado.endereco)
+            setValue('numero', itemSelecionado.numero)
+            setValue('bairro', itemSelecionado.bairro)
+            setValue('complemento', itemSelecionado.complemento)
         }
     }, [status])
 
-    const onSubmit = handleSubmit(data => setCliente(data));
+    const onSubmit = handleSubmit(data => setCadastro(data));
+
+    function validaIdentifica() {
+        let value = watch('identifica')
+        if (validaCpfCnpj(value)) {
+            onSubmit()
+            setStatus('salvar')
+            setStatusError('')
+        } else {
+            setStatusError('erro')
+            setStatus('erro identifica')
+        }
+    }
 
     return (
         <View>
@@ -51,17 +73,15 @@ export function ControlledInput({ cliente, setCliente, status, setStatus }) {
                     <Codigo value={value} />
                 )}
             />
-
             <Controller
                 name='nome'
                 control={control}
                 render={({ field: { onChange, value } }) => (
-                    <Texto subTitulo='Nome do cliente*' value={value} descricao="Digite o nome do cliente" onChange={onChange} />
+                    <Texto subTitulo='Nome *' value={value} descricao="Digite o nome" onChange={onChange} />
                 )}
             />
-            {errors.nome && <Text style={estilos.textoErro}
+            {errors.nome && <Text style={estilos.textoErro}>{errors.nome?.message}</Text>}
 
-            >{errors.nome?.message}</Text>}
             <Controller
                 name='identifica'
                 control={control}
@@ -69,7 +89,8 @@ export function ControlledInput({ cliente, setCliente, status, setStatus }) {
                     <CPFouCNPJ onChange={onChange} value={value} />
                 )}
             />
-            {errors.identifica && <Text style={estilos.textoErro}>{errors.identifica?.message}</Text>}
+            {statusError == 'erro' && <Text style={estilos.textoErro}>CPF ou CNPJ invalido!</Text>}
+
             <Controller
                 name='celular'
                 control={control}
@@ -94,7 +115,7 @@ export function ControlledInput({ cliente, setCliente, status, setStatus }) {
                     <CEP onChange={onChange} value={value} setValue={setValue} />
                 )}
             />
-            {errors.cep && <Text>{errors.cep?.message}</Text>}
+            {errors.cep && <Text style={estilos.textoErro}>{errors.cep?.message}</Text>}
             <Controller
                 name='endereco'
                 control={control}
